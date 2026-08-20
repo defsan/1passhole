@@ -7,69 +7,130 @@ struct UnlockView: View {
     @State private var isProcessing = false
     @State private var errorMessage: String?
     @State private var attemptedTouchID = false
+    @State private var showPassword = false
 
     @FocusState private var passwordFocused: Bool
 
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
+        HStack(spacing: 0) {
+            // Left panel — app icon
+            ZStack {
+                Color(.windowBackgroundColor)
+                    .opacity(0.6)
 
-            VStack(spacing: 24) {
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 48))
-                    .foregroundStyle(.tint)
+                VStack(spacing: 16) {
+                    ZStack {
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(width: 100, height: 100)
 
-                Text("1passhole")
-                    .font(.title.weight(.bold))
+                        Circle()
+                            .strokeBorder(
+                                LinearGradient(
+                                    colors: [.blue, .blue.opacity(0.6)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ),
+                                lineWidth: 4
+                            )
+                            .frame(width: 100, height: 100)
 
-                Text("Enter your master password to unlock.")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-
-                VStack(spacing: 12) {
-                    SecureField("Master password", text: $password)
-                        .focused($passwordFocused)
-                        .textFieldStyle(.roundedBorder)
-                        .onSubmit { unlockWithPassword() }
-                        .frame(width: 300)
-
-                    if let errorMessage {
-                        Label(errorMessage, systemImage: "xmark.circle.fill")
-                            .font(.caption)
-                            .foregroundStyle(.red)
+                        Image(systemName: "lock.shield.fill")
+                            .font(.system(size: 38, weight: .medium))
+                            .foregroundStyle(.primary)
                     }
-                }
-
-                HStack(spacing: 12) {
-                    Button("Unlock") {
-                        unlockWithPassword()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    .disabled(password.isEmpty || isProcessing)
 
                     if appState.authService.isTouchIDEnrolled {
                         Button {
                             unlockWithTouchID()
                         } label: {
                             Image(systemName: "touchid")
-                                .font(.title2)
+                                .font(.system(size: 28))
+                                .foregroundStyle(.secondary)
                         }
-                        .buttonStyle(.bordered)
-                        .controlSize(.large)
+                        .buttonStyle(.plain)
+                        .padding(.top, 8)
                     }
                 }
+            }
+            .frame(width: 240)
 
-                if isProcessing {
-                    ProgressView()
-                        .controlSize(.small)
+            // Right panel — password entry
+            ZStack {
+                VStack(spacing: 20) {
+                    Spacer()
+
+                    Text("1passhole")
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(.secondary)
+
+                    VStack(spacing: 8) {
+                        HStack(spacing: 4) {
+                            Group {
+                                if showPassword {
+                                    TextField("Enter your password", text: $password)
+                                } else {
+                                    SecureField("Enter your password", text: $password)
+                                }
+                            }
+                            .focused($passwordFocused)
+                            .textFieldStyle(.plain)
+                            .font(.system(size: 20))
+                            .onSubmit { unlockWithPassword() }
+
+                            Button {
+                                showPassword.toggle()
+                            } label: {
+                                Image(systemName: showPassword ? "eye.slash" : "eye")
+                                    .font(.system(size: 16))
+                                    .foregroundStyle(.secondary)
+                                    .frame(width: 34, height: 34)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+
+                            Button {
+                                unlockWithPassword()
+                            } label: {
+                                Image(systemName: "arrow.right")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 34, height: 34)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .fill(password.isEmpty ? Color.gray : Color.accentColor)
+                                    )
+                            }
+                            .buttonStyle(.plain)
+                            .disabled(password.isEmpty || isProcessing)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background {
+                            RoundedRectangle(cornerRadius: 10)
+                                .strokeBorder(.separator, lineWidth: 1)
+                        }
+                        .frame(width: 320)
+
+                        if let errorMessage {
+                            Text(errorMessage)
+                                .font(.caption)
+                                .foregroundStyle(.red)
+                                .frame(width: 320, alignment: .leading)
+                        }
+                    }
+
+                    if isProcessing {
+                        ProgressView()
+                            .controlSize(.small)
+                    }
+
+                    Spacer()
                 }
             }
-            .padding(40)
-
-            Spacer()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(minWidth: 500, minHeight: 400)
+        .frame(minWidth: 560, minHeight: 380)
         .onAppear {
             passwordFocused = true
             if appState.authService.isTouchIDEnrolled && !attemptedTouchID {
@@ -106,7 +167,7 @@ struct UnlockView: View {
                 let masterKey = try await appState.authService.unlockWithTouchID()
                 appState.unlock(with: masterKey)
             } catch {
-                errorMessage = "Touch ID failed. Enter your master password."
+                errorMessage = "Touch ID failed. Enter your password."
                 passwordFocused = true
             }
             isProcessing = false

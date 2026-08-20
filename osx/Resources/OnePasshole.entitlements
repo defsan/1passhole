@@ -6,6 +6,10 @@
 	<array>
 		<string>iCloud.com.1passhole.osx</string>
 	</array>
+	<key>com.apple.developer.icloud-services</key>
+	<array>
+		<string>CloudKit</string>
+	</array>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
 	<key>com.apple.security.keychain-access-groups</key>

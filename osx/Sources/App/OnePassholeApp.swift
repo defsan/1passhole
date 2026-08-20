@@ -5,13 +5,35 @@ import SwiftData
 struct OnePassholeApp: App {
     @State private var appState = AppState()
 
+    init() {
+        UserDefaults.standard.register(defaults: [
+            SettingsKey.clipboardTimeout: 300,
+            SettingsKey.lockOnSleep: true,
+            SettingsKey.lockOnScreenSaver: true,
+            SettingsKey.autoLockTimeout: 5,
+            SettingsKey.theme: "system",
+            SettingsKey.sidebarIconSize: "medium",
+            SettingsKey.compactMode: false,
+            SettingsKey.storageMode: "local",
+        ])
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(appState)
                 .modelContainer(appState.modelContainer)
+                .onAppear {
+                    let theme = UserDefaults.standard.string(forKey: SettingsKey.theme) ?? "system"
+                    AppearanceSettingsTab.applyTheme(theme)
+                }
         }
-        .windowStyle(.titleBar)
+        .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 900, height: 600)
+
+        Settings {
+            SettingsView()
+                .environment(appState)
+        }
     }
 }

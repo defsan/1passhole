@@ -13,9 +13,11 @@ Native macOS password manager, heavily inspired by 1Password. Open-source, audit
 - **Sync**: iCloud via CloudKit (planned)
 - **Project generation**: xcodegen (`project.yml`)
 - **Master password minimum**: 8 characters
-- **Clipboard auto-clear**: 5 minutes
+- **Clipboard auto-clear**: 5 minutes (configurable via Settings)
 - **Item create/edit**: Inline in the detail panel (no modal sheets)
 - **Detail view**: 1Password-style card-based layout
+- **Settings**: 1Password-style sidebar settings window (Cmd+,) with General, Vault, Appearance tabs
+- **Preferences storage**: `@AppStorage` (UserDefaults) for all user preferences
 
 ## Architecture
 
@@ -84,9 +86,10 @@ Master Password
 ```
 Sources/
   App/
-    OnePassholeApp.swift      — SwiftUI lifecycle, ModelContainer
-    AppState.swift            — Central @Observable state, lock management
+    OnePassholeApp.swift      — SwiftUI lifecycle, ModelContainer, Settings scene
+    AppState.swift            — Central @Observable state, lock management, lock observers
     ContentView.swift         — Routes lock states
+    SettingsKey.swift          — UserDefaults key constants
   Crypto/
     CryptoEngine.swift        — AES-256-GCM, key hierarchy ops
     KeyDerivation.swift       — Argon2id wrapper
@@ -111,6 +114,11 @@ Sources/
     Unlock/
       SetupView.swift         — Master password setup + Touch ID enrollment
       UnlockView.swift        — Unlock with password or Touch ID
+    Settings/
+      SettingsView.swift        — 1Password-style sidebar settings window
+      GeneralSettingsTab.swift  — Clipboard, lock-on-sleep, auto-lock
+      VaultSettingsTab.swift    — Storage location, Touch ID toggle
+      AppearanceSettingsTab.swift — Theme, icon size, compact mode
     Generator/
       PasswordGeneratorView.swift — Password/passphrase generator UI
 Tests/
@@ -153,8 +161,15 @@ Output: `1passhole.app` (set via `productName: 1passhole` in project.yml)
 - [x] Search with Cmd+F
 - [x] Cmd+N new item shortcut
 - [x] Password generator (random + passphrase)
-- [x] Clipboard auto-clear (5 minutes)
+- [x] Clipboard auto-clear (configurable, default 5 minutes)
 - [x] Verification hash for password check without storing password
+- [x] Settings window (Cmd+,) with General, Vault, Appearance tabs
+- [x] Lock on sleep / screen saver (configurable)
+- [x] Auto-lock idle timer (configurable)
+- [x] Touch ID enroll/unenroll from Settings
+- [x] Theme picker (System / Light / Dark)
+- [x] Compact mode and sidebar icon size settings
+- [x] iCloud sync via CloudKit (SwiftData automatic, toggle in Settings, restart required)
 
 ### Phase 2 — Polish
 - [ ] Full EFF diceware wordlist (load from resource bundle)
@@ -165,7 +180,7 @@ Output: `1passhole.app` (set via `productName: 1passhole` in project.yml)
 - [ ] Error handling polish
 
 ### Phase 3 — Sync & Platform
-- [ ] iCloud sync via CloudKit
+- [x] iCloud sync via CloudKit
 - [ ] TOTP authenticator (time-based one-time passwords)
 - [ ] System autofill (Credential Provider extension)
 - [ ] Import/export (1Password CSV, Bitwarden JSON)
@@ -173,7 +188,7 @@ Output: `1passhole.app` (set via `productName: 1passhole` in project.yml)
 ### Phase 4 — Power Features
 - [ ] Menu bar agent (NSStatusItem) with quick access
 - [ ] Global hotkey for quick search
-- [ ] Auto-lock on idle/sleep
+- [ ] Auto-lock on idle/sleep (basic timer done, needs activity reset)
 - [ ] Secure notes with rich text
 - [ ] Custom field types
 - [ ] Multiple vaults with distinct icons

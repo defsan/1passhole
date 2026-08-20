@@ -55,6 +55,8 @@ struct ItemListView: View {
 struct ItemRow: View {
     let item: Item
 
+    @AppStorage(SettingsKey.compactMode) private var compactMode: Bool = false
+
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: item.type.iconName)
@@ -62,17 +64,19 @@ struct ItemRow: View {
                 .foregroundStyle(.secondary)
                 .frame(width: 24)
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: compactMode ? 1 : 2) {
                 Text(item.title)
                     .font(.body.weight(.medium))
                     .lineLimit(1)
 
-                Text(item.type.displayName)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                if !compactMode {
+                    Text(item.type.displayName)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
-        .padding(.vertical, 2)
+        .padding(.vertical, compactMode ? 0 : 2)
     }
 }
 

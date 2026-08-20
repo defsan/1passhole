@@ -44,6 +44,8 @@ targets:
           - $(AppIdentifierPrefix)com.1passhole.shared
         com.apple.developer.icloud-container-identifiers:
           - iCloud.com.1passhole.osx
+        com.apple.developer.icloud-services:
+          - CloudKit
 
   OnePassholeTests:
     type: bundle.unit-test

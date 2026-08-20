@@ -93,6 +93,18 @@ final class AuthService: @unchecked Sendable {
         }
     }
 
+    func unenrollTouchID() throws {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: keychainService,
+            kSecAttrAccount as String: biometricAccount,
+        ]
+        let status = SecItemDelete(query as CFDictionary)
+        guard status == errSecSuccess || status == errSecItemNotFound else {
+            throw AuthError.keychainWriteFailed
+        }
+    }
+
     nonisolated func unlockWithTouchID() async throws -> SymmetricKeyData {
         let service = keychainService
         let account = biometricAccount

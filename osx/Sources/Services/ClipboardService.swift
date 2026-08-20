@@ -5,8 +5,10 @@ import Foundation
 enum ClipboardService {
     private static var clearTask: Task<Void, Never>?
 
-    /// Default auto-clear timeout in seconds (5 minutes).
-    static var clearTimeout: TimeInterval = 300
+    private static var effectiveTimeout: TimeInterval {
+        let stored = UserDefaults.standard.double(forKey: SettingsKey.clipboardTimeout)
+        return stored > 0 ? stored : 300
+    }
 
     /// Copy a string to the pasteboard, scheduling auto-clear.
     static func copy(_ string: String) {
@@ -20,7 +22,7 @@ enum ClipboardService {
     private static func scheduleClear() {
         clearTask?.cancel()
         clearTask = Task {
-            try? await Task.sleep(for: .seconds(clearTimeout))
+            try? await Task.sleep(for: .seconds(effectiveTimeout))
             guard !Task.isCancelled else { return }
             NSPasteboard.general.clearContents()
         }

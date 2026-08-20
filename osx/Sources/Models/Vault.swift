@@ -3,7 +3,7 @@ import SwiftData
 
 @Model
 final class Vault {
-    @Attribute(.unique) var id: UUID
+    var id: UUID
     var name: String
     var iconName: String
     var createdAt: Date

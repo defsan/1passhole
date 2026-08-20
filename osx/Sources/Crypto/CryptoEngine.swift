@@ -46,6 +46,11 @@ final class CryptoEngine {
         return masterKey.symmetricKey
     }
 
+    func getMasterKeyData() throws -> SymmetricKeyData {
+        guard let masterKey else { throw CryptoError.masterKeyNotSet }
+        return masterKey
+    }
+
     // MARK: - Key generation
 
     /// Generate a new random 256-bit symmetric key.

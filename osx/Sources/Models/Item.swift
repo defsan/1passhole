@@ -10,7 +10,7 @@ enum ItemType: String, Codable, CaseIterable {
 
 @Model
 final class Item {
-    @Attribute(.unique) var id: UUID
+    var id: UUID
     var vault: Vault?
 
     /// Unencrypted metadata for search/display without decryption.

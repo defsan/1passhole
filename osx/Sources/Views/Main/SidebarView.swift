@@ -7,15 +7,32 @@ struct SidebarView: View {
     @Environment(AppState.self) private var appState
     @Query(sort: \Vault.name) private var vaults: [Vault]
 
+    @AppStorage(SettingsKey.sidebarIconSize) private var sidebarIconSize: String = "medium"
+    @AppStorage(SettingsKey.compactMode) private var compactMode: Bool = false
+
     @State private var showingNewVault = false
     @State private var newVaultName = ""
+
+    private var iconFont: Font {
+        switch sidebarIconSize {
+        case "small": .body
+        case "large": .title2
+        default: .title3
+        }
+    }
 
     var body: some View {
         List(selection: $selectedVault) {
             Section("Vaults") {
                 ForEach(vaults) { vault in
-                    Label(vault.name, systemImage: vault.iconName)
-                        .tag(vault)
+                    Label {
+                        Text(vault.name)
+                    } icon: {
+                        Image(systemName: vault.iconName)
+                            .font(iconFont)
+                    }
+                    .padding(.vertical, compactMode ? 0 : 2)
+                    .tag(vault)
                         .contextMenu {
                             Button("Rename...") { renameVault(vault) }
                             Divider()
