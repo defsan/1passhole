@@ -1,0 +1,571 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		03987E398786387464383A16 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAB25588E749BEB68DF8A8B /* Item.swift */; };
+		0B66D1BA66C6C1FC80B6A7A8 /* ItemTemplates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501F856CDCA5010D654205DD /* ItemTemplates.swift */; };
+		0DDE934AC97CBDF9195D31C0 /* Vault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36981751C47EC28B52757C75 /* Vault.swift */; };
+		0E08D3558971459075C22788 /* SymmetricKeyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C3CF7887081566C4BFDA16 /* SymmetricKeyData.swift */; };
+		1DE02CAE68D1DC6D760D256B /* CryptoEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA342AE88E2ED4848EF27BB /* CryptoEngine.swift */; };
+		3929F5B09C2E793FDC2CF2F0 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9608F2E52397926B99EADF5 /* AuthService.swift */; };
+		3B7BA3A523E5A17A8274CE8D /* VaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8011A134816547A62166477B /* VaultService.swift */; };
+		4203CB8768381FF3C389CF56 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C87D74E18F72BD116387CE /* ItemDetailView.swift */; };
+		47FE2C8007C726EB31BBCE6A /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABC107A137BF2CFCB925931 /* SetupView.swift */; };
+		55550296DE1C66123DC0CA0A /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9ABB94729D50D6429451FAE /* AppState.swift */; };
+		66FE7E9186E2729FCEAEE715 /* CryptoEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E0CB28677B2BAF282500BA /* CryptoEngineTests.swift */; };
+		6A0A5FD9EEC1C41E4AFAEEE4 /* ClipboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB79ACDC19E19A0E699973A /* ClipboardService.swift */; };
+		6C259C5D717F960ABA0A4616 /* OnePassholeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC6F29FBFF4206988F387B6 /* OnePassholeApp.swift */; };
+		8D4EB0EC759FF5485418CD71 /* UnlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4287216D8BEA18112DA4BA7D /* UnlockView.swift */; };
+		A675F9385DEB0253F0861824 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8FA989D08482472FFB32A2 /* SidebarView.swift */; };
+		A7F018E0624359D8B21DB635 /* Argon2Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1AB11541CF0B829238535084 /* Argon2Swift */; };
+		B3DF560A4C3D7C5D05057EED /* ItemEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E90349AD50AA540E98C421 /* ItemEditView.swift */; };
+		BF0C202406340050B8E251E2 /* PasswordGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A471DC84D4A6A1D8EA8D09F /* PasswordGeneratorView.swift */; };
+		C557E167141C109ECD63B319 /* ItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710CC94574B44313E66B3AEE /* ItemListView.swift */; };
+		C7780AF36615E3FABEA36EEA /* PasswordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3DC9FE93163650549A873E /* PasswordGenerator.swift */; };
+		DAD65D9191BF87A7B3A5337C /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7FC2E253A09057C9DB63FA3 /* MainView.swift */; };
+		DE74D6B45203A759B5D4F5E3 /* KeyDerivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C15FF2831989CE7223F61C /* KeyDerivation.swift */; };
+		FFFAFD6A968EC517FC890088 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BF585D420F5C445B70FB34 /* ContentView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6725BF2BE41EE124EEB5C093 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE82EEF8FC2E8A67DF696180 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B37F997900807957DB69D4B9;
+			remoteInfo = OnePasshole;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		04B3AD48E1677D256A26A5DE /* 1passhole.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 1passhole.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		10C15FF2831989CE7223F61C /* KeyDerivation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyDerivation.swift; sourceTree = "<group>"; };
+		27F546B9315E6B77CC76A46E /* OnePassholeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnePassholeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		36981751C47EC28B52757C75 /* Vault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vault.swift; sourceTree = "<group>"; };
+		4287216D8BEA18112DA4BA7D /* UnlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockView.swift; sourceTree = "<group>"; };
+		4B8FA989D08482472FFB32A2 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		4EA342AE88E2ED4848EF27BB /* CryptoEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoEngine.swift; sourceTree = "<group>"; };
+		501F856CDCA5010D654205DD /* ItemTemplates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTemplates.swift; sourceTree = "<group>"; };
+		58E0CB28677B2BAF282500BA /* CryptoEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoEngineTests.swift; sourceTree = "<group>"; };
+		5AC6F29FBFF4206988F387B6 /* OnePassholeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnePassholeApp.swift; sourceTree = "<group>"; };
+		710CC94574B44313E66B3AEE /* ItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListView.swift; sourceTree = "<group>"; };
+		79C3CF7887081566C4BFDA16 /* SymmetricKeyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetricKeyData.swift; sourceTree = "<group>"; };
+		7ABC107A137BF2CFCB925931 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
+		8011A134816547A62166477B /* VaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultService.swift; sourceTree = "<group>"; };
+		9A471DC84D4A6A1D8EA8D09F /* PasswordGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorView.swift; sourceTree = "<group>"; };
+		B7FC2E253A09057C9DB63FA3 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		BFB79ACDC19E19A0E699973A /* ClipboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardService.swift; sourceTree = "<group>"; };
+		CC3DC9FE93163650549A873E /* PasswordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGenerator.swift; sourceTree = "<group>"; };
+		D3C87D74E18F72BD116387CE /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
+		D9608F2E52397926B99EADF5 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		E4E90349AD50AA540E98C421 /* ItemEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditView.swift; sourceTree = "<group>"; };
+		F2BF585D420F5C445B70FB34 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F9ABB94729D50D6429451FAE /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		FAAB25588E749BEB68DF8A8B /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D92B5B7008F1C60390FBD6C5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A7F018E0624359D8B21DB635 /* Argon2Swift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2011E7227D09060074ABAAE4 /* Generator */ = {
+			isa = PBXGroup;
+			children = (
+				9A471DC84D4A6A1D8EA8D09F /* PasswordGeneratorView.swift */,
+			);
+			path = Generator;
+			sourceTree = "<group>";
+		};
+		2EEB1971FB9510D00C98449E /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				710CC94574B44313E66B3AEE /* ItemListView.swift */,
+				B7FC2E253A09057C9DB63FA3 /* MainView.swift */,
+				4B8FA989D08482472FFB32A2 /* SidebarView.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		3C84FCFEB2ECDA5196B3B56F /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				58E0CB28677B2BAF282500BA /* CryptoEngineTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		4040E0BA23C9A80EC6F868BE /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				D9608F2E52397926B99EADF5 /* AuthService.swift */,
+				BFB79ACDC19E19A0E699973A /* ClipboardService.swift */,
+				CC3DC9FE93163650549A873E /* PasswordGenerator.swift */,
+				8011A134816547A62166477B /* VaultService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4F96451F09B26B1158E406A3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FAAB25588E749BEB68DF8A8B /* Item.swift */,
+				501F856CDCA5010D654205DD /* ItemTemplates.swift */,
+				36981751C47EC28B52757C75 /* Vault.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5DC1688840F11568AA933C5D /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				4EA342AE88E2ED4848EF27BB /* CryptoEngine.swift */,
+				10C15FF2831989CE7223F61C /* KeyDerivation.swift */,
+				79C3CF7887081566C4BFDA16 /* SymmetricKeyData.swift */,
+			);
+			path = Crypto;
+			sourceTree = "<group>";
+		};
+		65825CE13221288447E75C5F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2011E7227D09060074ABAAE4 /* Generator */,
+				B09664431D440E40BBE7DC7E /* Items */,
+				2EEB1971FB9510D00C98449E /* Main */,
+				6E0CCDCC54ADF6B4F0EF95D9 /* Unlock */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6E0CCDCC54ADF6B4F0EF95D9 /* Unlock */ = {
+			isa = PBXGroup;
+			children = (
+				7ABC107A137BF2CFCB925931 /* SetupView.swift */,
+				4287216D8BEA18112DA4BA7D /* UnlockView.swift */,
+			);
+			path = Unlock;
+			sourceTree = "<group>";
+		};
+		8408E06EE3EE8005829A7D2F = {
+			isa = PBXGroup;
+			children = (
+				BC60D56D9AC6F4040F794A4F /* Sources */,
+				3C84FCFEB2ECDA5196B3B56F /* Tests */,
+				B545D274611329CFEB4733B1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8ECA9855C886495E630D5EE7 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				F9ABB94729D50D6429451FAE /* AppState.swift */,
+				F2BF585D420F5C445B70FB34 /* ContentView.swift */,
+				5AC6F29FBFF4206988F387B6 /* OnePassholeApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		B09664431D440E40BBE7DC7E /* Items */ = {
+			isa = PBXGroup;
+			children = (
+				D3C87D74E18F72BD116387CE /* ItemDetailView.swift */,
+				E4E90349AD50AA540E98C421 /* ItemEditView.swift */,
+			);
+			path = Items;
+			sourceTree = "<group>";
+		};
+		B545D274611329CFEB4733B1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				04B3AD48E1677D256A26A5DE /* 1passhole.app */,
+				27F546B9315E6B77CC76A46E /* OnePassholeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BC60D56D9AC6F4040F794A4F /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				8ECA9855C886495E630D5EE7 /* App */,
+				5DC1688840F11568AA933C5D /* Crypto */,
+				4F96451F09B26B1158E406A3 /* Models */,
+				4040E0BA23C9A80EC6F868BE /* Services */,
+				65825CE13221288447E75C5F /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B37F997900807957DB69D4B9 /* OnePasshole */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EDDB3AB33DF2D9AAF216CD0C /* Build configuration list for PBXNativeTarget "OnePasshole" */;
+			buildPhases = (
+				022DAF4900126B0A3F23BC02 /* Sources */,
+				D92B5B7008F1C60390FBD6C5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OnePasshole;
+			packageProductDependencies = (
+				1AB11541CF0B829238535084 /* Argon2Swift */,
+			);
+			productName = OnePasshole;
+			productReference = 04B3AD48E1677D256A26A5DE /* 1passhole.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EB2BBE207ED81BED1C2FEB07 /* OnePassholeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 93ED1D6ECD8A2D2AE4069E85 /* Build configuration list for PBXNativeTarget "OnePassholeTests" */;
+			buildPhases = (
+				FF9DD93113181C2B4E3C894E /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EA855C1763A3A873F5720C5A /* PBXTargetDependency */,
+			);
+			name = OnePassholeTests;
+			packageProductDependencies = (
+			);
+			productName = OnePassholeTests;
+			productReference = 27F546B9315E6B77CC76A46E /* OnePassholeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CE82EEF8FC2E8A67DF696180 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 5D645D4ABB8D7819E08727C3 /* Build configuration list for PBXProject "OnePasshole" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 8408E06EE3EE8005829A7D2F;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CEE95A4D4750FDC22C1032FE /* XCRemoteSwiftPackageReference "Argon2Swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B545D274611329CFEB4733B1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B37F997900807957DB69D4B9 /* OnePasshole */,
+				EB2BBE207ED81BED1C2FEB07 /* OnePassholeTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		022DAF4900126B0A3F23BC02 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55550296DE1C66123DC0CA0A /* AppState.swift in Sources */,
+				3929F5B09C2E793FDC2CF2F0 /* AuthService.swift in Sources */,
+				6A0A5FD9EEC1C41E4AFAEEE4 /* ClipboardService.swift in Sources */,
+				FFFAFD6A968EC517FC890088 /* ContentView.swift in Sources */,
+				1DE02CAE68D1DC6D760D256B /* CryptoEngine.swift in Sources */,
+				03987E398786387464383A16 /* Item.swift in Sources */,
+				4203CB8768381FF3C389CF56 /* ItemDetailView.swift in Sources */,
+				B3DF560A4C3D7C5D05057EED /* ItemEditView.swift in Sources */,
+				C557E167141C109ECD63B319 /* ItemListView.swift in Sources */,
+				0B66D1BA66C6C1FC80B6A7A8 /* ItemTemplates.swift in Sources */,
+				DE74D6B45203A759B5D4F5E3 /* KeyDerivation.swift in Sources */,
+				DAD65D9191BF87A7B3A5337C /* MainView.swift in Sources */,
+				6C259C5D717F960ABA0A4616 /* OnePassholeApp.swift in Sources */,
+				C7780AF36615E3FABEA36EEA /* PasswordGenerator.swift in Sources */,
+				BF0C202406340050B8E251E2 /* PasswordGeneratorView.swift in Sources */,
+				47FE2C8007C726EB31BBCE6A /* SetupView.swift in Sources */,
+				A675F9385DEB0253F0861824 /* SidebarView.swift in Sources */,
+				0E08D3558971459075C22788 /* SymmetricKeyData.swift in Sources */,
+				8D4EB0EC759FF5485418CD71 /* UnlockView.swift in Sources */,
+				0DDE934AC97CBDF9195D31C0 /* Vault.swift in Sources */,
+				3B7BA3A523E5A17A8274CE8D /* VaultService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FF9DD93113181C2B4E3C894E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				66FE7E9186E2729FCEAEE715 /* CryptoEngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EA855C1763A3A873F5720C5A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B37F997900807957DB69D4B9 /* OnePasshole */;
+			targetProxy = 6725BF2BE41EE124EEB5C093 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		5048163F5724A6180344B412 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.1passhole.osx.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/1passhole.app/Contents/MacOS/1passhole";
+			};
+			name = Release;
+		};
+		82C6C1EF07E8A2FE43A37F54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		89CEF7C647CEC2087192EA8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Resources/OnePasshole.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.1passhole.osx;
+				PRODUCT_NAME = 1passhole;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		95FF3E5F07674A7B9CD27C19 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Resources/OnePasshole.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.1passhole.osx;
+				PRODUCT_NAME = 1passhole;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		B208FB909048B565F1B09E97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		B99A448F86BB3F23DE268022 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.1passhole.osx.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/1passhole.app/Contents/MacOS/1passhole";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D645D4ABB8D7819E08727C3 /* Build configuration list for PBXProject "OnePasshole" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B208FB909048B565F1B09E97 /* Debug */,
+				82C6C1EF07E8A2FE43A37F54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		93ED1D6ECD8A2D2AE4069E85 /* Build configuration list for PBXNativeTarget "OnePassholeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B99A448F86BB3F23DE268022 /* Debug */,
+				5048163F5724A6180344B412 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EDDB3AB33DF2D9AAF216CD0C /* Build configuration list for PBXNativeTarget "OnePasshole" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89CEF7C647CEC2087192EA8B /* Debug */,
+				95FF3E5F07674A7B9CD27C19 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CEE95A4D4750FDC22C1032FE /* XCRemoteSwiftPackageReference "Argon2Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tmthecoder/Argon2Swift";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1AB11541CF0B829238535084 /* Argon2Swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEE95A4D4750FDC22C1032FE /* XCRemoteSwiftPackageReference "Argon2Swift" */;
+			productName = Argon2Swift;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = CE82EEF8FC2E8A67DF696180 /* Project object */;
+}
