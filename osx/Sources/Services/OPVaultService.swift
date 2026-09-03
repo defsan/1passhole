@@ -189,8 +189,29 @@ enum OPVaultService {
                     let rawValue = fieldObj["v"]?.stringValue ?? ""
                     guard !rawValue.isEmpty else { continue }
 
+                    // TOTP fields are identified purely by id prefix, ahead of everything
+                    // else — confirmed against KeePassXC's own production OPVault reader,
+                    // which checks this before its generic kind-based mapping.
+                    if n.hasPrefix("TOTP_") {
+                        fields.append(ItemField(
+                            label: "One-Time Password",
+                            value: rawValue,
+                            type: .totp,
+                            isConcealed: true,
+                            sectionSourceKey: "\(sectionIndex).\(n)"
+                        ))
+                        continue
+                    }
+
                     let kind = fieldObj["k"]?.stringValue ?? "string"
-                    let (group, displayLabel) = parseGroupedFieldName(n, fallbackTitle: fieldObj["t"]?.stringValue)
+                    let title = fieldObj["t"]?.stringValue
+                    // The bracket text (e.g. "user[login]") can show up in either the
+                    // field's id ("n") or its human title ("t") depending on the client
+                    // that wrote it — check both rather than assuming which one.
+                    let (group, displayLabel) = parseGroupedFieldName(
+                        candidates: [title, n].compactMap { $0 },
+                        fallback: (title?.isEmpty == false ? title! : n)
+                    )
                     fields.append(ItemField(
                         label: group.map { "\($0): \(displayLabel)" } ?? displayLabel,
                         value: rawValue,
@@ -206,20 +227,24 @@ enum OPVaultService {
         return ItemPayload(fields: fields, notes: (notes?.isEmpty ?? true) ? nil : notes)
     }
 
-    /// Recognizes the "group[name]" convention some section field ids use (e.g.
-    /// `"user[login]"` → group "User", label "Login"). Falls back to the field's own
-    /// title, or the raw id if that's blank too, when the id doesn't match that shape.
-    private static func parseGroupedFieldName(_ n: String, fallbackTitle: String?) -> (group: String?, label: String) {
-        let fallback = (fallbackTitle?.isEmpty == false ? fallbackTitle! : n)
-        guard let openBracket = n.firstIndex(of: "["), n.hasSuffix("]"), openBracket != n.startIndex else {
-            return (nil, fallback)
+    /// Recognizes the "group[name]" convention some section fields use (e.g.
+    /// `"user[login]"` → group "User", label "Login"), trying each candidate string in
+    /// order (typically the field's title, then its id) and using whichever one actually
+    /// matches that shape. Falls back to `fallback` when none of them do.
+    private static func parseGroupedFieldName(candidates: [String], fallback: String) -> (group: String?, label: String) {
+        for candidate in candidates {
+            guard let openBracket = candidate.firstIndex(of: "["),
+                  candidate.hasSuffix("]"),
+                  openBracket != candidate.startIndex
+            else { continue }
+            let group = String(candidate[candidate.startIndex..<openBracket])
+            let innerRange = candidate.index(after: openBracket)..<candidate.index(before: candidate.endIndex)
+            guard innerRange.lowerBound < innerRange.upperBound else { continue }
+            let inner = String(candidate[innerRange])
+            guard !group.isEmpty, !inner.isEmpty else { continue }
+            return (group.capitalized, inner.capitalized)
         }
-        let group = String(n[n.startIndex..<openBracket])
-        let innerRange = n.index(after: openBracket)..<n.index(before: n.endIndex)
-        guard innerRange.lowerBound < innerRange.upperBound else { return (nil, fallback) }
-        let inner = String(n[innerRange])
-        guard !group.isEmpty, !inner.isEmpty else { return (nil, fallback) }
-        return (group.capitalized, inner.capitalized)
+        return (nil, fallback)
     }
 
     private static func fieldType(forSectionKind kind: String) -> FieldType {
@@ -243,8 +268,10 @@ enum OPVaultService {
 
         // Only fields with no section origin go into the flat top-level array — section
         // fields are written back into their own original slot below instead, so editing
-        // one never duplicates it into `fields` or otherwise disturbs the section.
-        let flatFields = payload.fields.filter { $0.sectionSourceKey == nil }
+        // one never duplicates it into `fields` or otherwise disturbs the section. TOTP
+        // fields never belong here even when new (no sectionSourceKey yet) — they always
+        // live in `sections`, handled separately below.
+        let flatFields = payload.fields.filter { $0.sectionSourceKey == nil && $0.type != .totp }
         let fieldsArray: [OPVaultJSONValue] = flatFields.map { field in
             let designation = field.type == .password ? "password" : (field.label.lowercased() == "username" ? "username" : "")
             return .object([
@@ -281,6 +308,33 @@ enum OPVaultService {
                 sectionObj["fields"] = .array(sectionFieldsArr)
                 sections[sectionIndex] = .object(sectionObj)
             }
+            dict["sections"] = .array(sections)
+        }
+
+        // A `.totp` field with no `sectionSourceKey` was just added in this edit, not
+        // loaded from an existing section — synthesize a new section-field entry for it
+        // rather than dropping it. Real 1Password keeps one-time-password fields in the
+        // item's default (first, often unnamed) section, so a fresh empty one is created
+        // when none exists yet.
+        let newTOTPFields = payload.fields.filter { $0.type == .totp && $0.sectionSourceKey == nil }
+        if !newTOTPFields.isEmpty {
+            var sections = dict["sections"]?.arrayValue ?? []
+            if sections.isEmpty {
+                sections = [.object(["name": .string(""), "title": .string(""), "fields": .array([])])]
+            }
+            var firstSection = sections[0].objectValue ?? ["name": .string(""), "title": .string(""), "fields": .array([])]
+            var sectionFieldsArr = firstSection["fields"]?.arrayValue ?? []
+            for field in newTOTPFields {
+                let n = "TOTP_" + UUID().uuidString.replacingOccurrences(of: "-", with: "")
+                sectionFieldsArr.append(.object([
+                    "n": .string(n),
+                    "t": .string("one-time password"),
+                    "v": .string(field.value),
+                    "k": .string("concealed"),
+                ]))
+            }
+            firstSection["fields"] = .array(sectionFieldsArr)
+            sections[0] = .object(firstSection)
             dict["sections"] = .array(sections)
         }
 

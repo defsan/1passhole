@@ -23,9 +23,18 @@ struct OPVaultItemListView: View {
     @State private var searchQuery = ""
     @FocusState private var searchFocused: Bool
 
+    /// Multiple space-separated words are OR'd (an item needs only one to appear at all),
+    /// but ranked by how many of the words it matched — an item matching every word
+    /// floats to the top, ahead of ones matching only some.
     private var filteredEntries: [SearchableEntry] {
-        guard !searchQuery.isEmpty else { return entries }
-        return entries.filter { $0.searchableText.localizedCaseInsensitiveContains(searchQuery) }
+        let words = SearchRanking.words(in: searchQuery)
+        guard !words.isEmpty else { return entries }
+
+        let scored: [(entry: SearchableEntry, score: Int)] = entries.compactMap { entry in
+            let score = SearchRanking.score(words: words, in: entry.searchableText)
+            return score > 0 ? (entry, score) : nil
+        }
+        return scored.sorted { $0.score > $1.score }.map(\.entry)
     }
 
     var body: some View {
@@ -69,15 +78,7 @@ struct OPVaultItemListView: View {
     }
 
     private static func searchableText(title: String, payload: ItemPayload) -> String {
-        var parts = [title]
-        for field in payload.fields where !field.isConcealed && field.type != .password {
-            parts.append(field.label)
-            parts.append(field.value)
-        }
-        if let notes = payload.notes {
-            parts.append(notes)
-        }
-        return parts.joined(separator: " ")
+        title + " " + payload.nonSecretSearchableText
     }
 }
 

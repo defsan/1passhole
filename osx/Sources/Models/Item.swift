@@ -53,6 +53,21 @@ struct ItemPayload: Codable {
                 ($0.label.localizedCaseInsensitiveCompare("username") == .orderedSame || $0.type == .email)
         }.map(\.value).flatMap { $0.isEmpty ? nil : $0 }
     }
+
+    /// Every non-secret field's label/value plus notes, joined for search matching.
+    /// Never includes concealed/password fields. Title isn't included here since callers
+    /// already have that separately.
+    var nonSecretSearchableText: String {
+        var parts: [String] = []
+        for field in fields where !field.isConcealed && field.type != .password {
+            parts.append(field.label)
+            parts.append(field.value)
+        }
+        if let notes {
+            parts.append(notes)
+        }
+        return parts.joined(separator: " ")
+    }
 }
 
 struct ItemField: Codable, Identifiable {

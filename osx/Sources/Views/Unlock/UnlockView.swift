@@ -134,7 +134,12 @@ struct UnlockView: View {
         }
         .frame(minWidth: 680, minHeight: 380)
         .onAppear {
-            passwordFocused = true
+            // Setting @FocusState synchronously here often silently fails right at app
+            // launch, before the window has actually become key — deferring to the next
+            // run loop tick is the reliable fix.
+            DispatchQueue.main.async {
+                passwordFocused = true
+            }
             if appState.authService.isTouchIDEnrolled && !attemptedTouchID {
                 attemptedTouchID = true
                 unlockWithTouchID()

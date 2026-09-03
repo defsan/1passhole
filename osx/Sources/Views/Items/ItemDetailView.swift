@@ -52,20 +52,26 @@ struct ItemDetailView: View {
                                     if index > 0 {
                                         Divider()
                                     }
-                                    DetailFieldRow(
-                                        field: field,
-                                        isRevealed: revealedFields.contains(field.id),
-                                        onToggleReveal: {
-                                            if revealedFields.contains(field.id) {
-                                                revealedFields.remove(field.id)
-                                            } else {
-                                                revealedFields.insert(field.id)
+                                    if field.type == .totp {
+                                        TOTPFieldRow(field: field, onCopy: { code in
+                                            ClipboardService.copy(code)
+                                        })
+                                    } else {
+                                        DetailFieldRow(
+                                            field: field,
+                                            isRevealed: revealedFields.contains(field.id),
+                                            onToggleReveal: {
+                                                if revealedFields.contains(field.id) {
+                                                    revealedFields.remove(field.id)
+                                                } else {
+                                                    revealedFields.insert(field.id)
+                                                }
+                                            },
+                                            onCopy: {
+                                                ClipboardService.copy(field.value)
                                             }
-                                        },
-                                        onCopy: {
-                                            ClipboardService.copy(field.value)
-                                        }
-                                    )
+                                        )
+                                    }
                                 }
                             }
                         }

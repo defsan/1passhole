@@ -18,6 +18,13 @@ struct ItemEditView: View {
     @State private var notes = ""
     @State private var errorMessage: String?
     @State private var showingGenerator = false
+    @State private var showingTOTPSetup = false
+    @State private var totpSetupFieldID: UUID?
+    @FocusState private var focusedFieldID: UUID?
+    @FocusState private var titleFocused: Bool
+
+    /// ~10% taller than the system default rounded-border text field height (~22pt).
+    private let fieldHeight: CGFloat = 24
 
     private var isEditing: Bool {
         if case .edit = mode { return true }
@@ -49,6 +56,8 @@ struct ItemEditView: View {
                     TextField("Title", text: $title)
                         .textFieldStyle(.roundedBorder)
                         .font(.title3)
+                        .frame(height: fieldHeight)
+                        .focused($titleFocused)
 
                     if !isEditing {
                         Picker("Type", selection: $selectedType) {
@@ -81,6 +90,8 @@ struct ItemEditView: View {
                                     HStack(spacing: 4) {
                                         SecureField("Value", text: $field.value)
                                             .textFieldStyle(.roundedBorder)
+                                            .frame(height: fieldHeight)
+                                            .focused($focusedFieldID, equals: field.id)
                                         Button {
                                             showingGenerator = true
                                         } label: {
@@ -88,9 +99,24 @@ struct ItemEditView: View {
                                         }
                                         .buttonStyle(.bordered)
                                     }
+                                } else if field.type == .totp {
+                                    HStack(spacing: 4) {
+                                        Text(field.value.isEmpty ? "Not configured" : "One-Time Password configured")
+                                            .font(.body)
+                                            .foregroundStyle(.secondary)
+                                        Spacer()
+                                        Button("Replace") {
+                                            totpSetupFieldID = field.id
+                                            showingTOTPSetup = true
+                                        }
+                                        .buttonStyle(.bordered)
+                                    }
+                                    .frame(height: fieldHeight)
                                 } else {
                                     TextField(field.label.isEmpty ? "Value" : field.label, text: $field.value)
                                         .textFieldStyle(.roundedBorder)
+                                        .frame(height: fieldHeight)
+                                        .focused($focusedFieldID, equals: field.id)
                                 }
                             }
 
@@ -103,12 +129,19 @@ struct ItemEditView: View {
                         }
                     }
 
-                    Button {
-                        fields.append(ItemField(label: "", value: ""))
+                    Menu {
+                        Button("Add Field") {
+                            fields.append(ItemField(label: "", value: ""))
+                        }
+                        Button("Add One-Time Password") {
+                            totpSetupFieldID = nil
+                            showingTOTPSetup = true
+                        }
                     } label: {
                         Label("Add Field", systemImage: "plus.circle")
                     }
-                    .buttonStyle(.borderless)
+                    .menuStyle(.borderlessButton)
+                    .fixedSize()
 
                     Divider()
 
@@ -156,6 +189,15 @@ struct ItemEditView: View {
                 }
             }
         }
+        .sheet(isPresented: $showingTOTPSetup) {
+            TOTPSetupView { value in
+                if let id = totpSetupFieldID, let idx = fields.firstIndex(where: { $0.id == id }) {
+                    fields[idx].value = value
+                } else {
+                    fields.append(ItemField(label: "One-Time Password", value: value, type: .totp, isConcealed: true))
+                }
+            }
+        }
     }
 
     private func loadExisting() {
@@ -172,6 +214,9 @@ struct ItemEditView: View {
             }
         } else {
             applyTemplate()
+            DispatchQueue.main.async {
+                titleFocused = true
+            }
         }
     }
 

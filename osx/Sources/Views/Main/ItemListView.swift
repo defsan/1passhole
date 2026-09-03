@@ -19,21 +19,26 @@ struct ItemListView: View {
     /// Matches title first (cheap), then decrypts to check non-secret fields/notes.
     /// Native vaults are small enough that decrypting per keystroke is imperceptible —
     /// no need for the cached-index approach `OPVaultItemListView` uses for 1000+ items.
+    ///
+    /// Multiple space-separated words are OR'd (an item needs only one to appear at
+    /// all), but ranked by how many of the words it matched — an item matching every
+    /// word floats to the top, ahead of ones matching only some.
     private var filteredItems: [Item] {
-        guard !searchQuery.isEmpty else { return vaultItems }
+        let words = SearchRanking.words(in: searchQuery)
+        guard !words.isEmpty else { return vaultItems }
+
         let crypto = appState.cryptoEngine
-        return vaultItems.filter { item in
-            if item.title.localizedCaseInsensitiveContains(searchQuery) { return true }
-            guard let vault = item.vault,
-                  let vaultKey = try? crypto.decryptVaultKey(from: vault.encryptedKey),
-                  let payload = try? crypto.decryptPayload(from: item.encryptedPayload, using: vaultKey)
-            else { return false }
-            return payload.fields.contains { field in
-                !field.isConcealed && field.type != .password &&
-                    (field.label.localizedCaseInsensitiveContains(searchQuery) ||
-                     field.value.localizedCaseInsensitiveContains(searchQuery))
-            } || (payload.notes?.localizedCaseInsensitiveContains(searchQuery) ?? false)
+        let scored: [(item: Item, score: Int)] = vaultItems.compactMap { item in
+            var text = item.title
+            if let vault = item.vault,
+               let vaultKey = try? crypto.decryptVaultKey(from: vault.encryptedKey),
+               let payload = try? crypto.decryptPayload(from: item.encryptedPayload, using: vaultKey) {
+                text += " " + payload.nonSecretSearchableText
+            }
+            let score = SearchRanking.score(words: words, in: text)
+            return score > 0 ? (item, score) : nil
         }
+        return scored.sorted { $0.score > $1.score }.map(\.item)
     }
 
     var body: some View {

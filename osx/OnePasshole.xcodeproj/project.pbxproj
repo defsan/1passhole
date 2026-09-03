@@ -21,16 +21,20 @@
 		3F2830EC4A603D8AABC5E243 /* OPVaultItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE99F3416C7AA4A0EB04D16 /* OPVaultItemListView.swift */; };
 		3F7AACCBA76AF3BCADA27AE4 /* SettingsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE19CEA4B549C5C0B4F7ADF0 /* SettingsKey.swift */; };
 		4203CB8768381FF3C389CF56 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C87D74E18F72BD116387CE /* ItemDetailView.swift */; };
+		461333A6DB652EFC85395B9F /* TOTPGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFD3776CFD596CB3411CB449 /* TOTPGeneratorTests.swift */; };
 		47FE2C8007C726EB31BBCE6A /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABC107A137BF2CFCB925931 /* SetupView.swift */; };
 		4C838B58BD2560E76ABF4FD6 /* OPVaultItemEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D0DC2F5AF14E9961E38D4B /* OPVaultItemEditView.swift */; };
 		55550296DE1C66123DC0CA0A /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9ABB94729D50D6429451FAE /* AppState.swift */; };
 		55E0504D856EB39810ABF24D /* OPVaultCryptoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40237264A136F3981537D86 /* OPVaultCryptoTests.swift */; };
 		590C39F8E583E7B88304D6AE /* OPVaultItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE8F19854432CD8ED449355 /* OPVaultItemDetailView.swift */; };
 		5CB12791B951CD0BFE26425D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D738B9344575603FE0B0D3D9 /* SettingsView.swift */; };
+		661B29F792DF5E9EC986E849 /* TOTPGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB72D12231040726A56990CC /* TOTPGenerator.swift */; };
 		66FE7E9186E2729FCEAEE715 /* CryptoEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E0CB28677B2BAF282500BA /* CryptoEngineTests.swift */; };
 		6A0A5FD9EEC1C41E4AFAEEE4 /* ClipboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB79ACDC19E19A0E699973A /* ClipboardService.swift */; };
+		6BAD9EA35A5DDBFEFA3421C0 /* TOTPFieldRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFFD3B3F885716C9D2BA048 /* TOTPFieldRow.swift */; };
 		6C259C5D717F960ABA0A4616 /* OnePassholeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC6F29FBFF4206988F387B6 /* OnePassholeApp.swift */; };
 		6D8DCDCA91D07D61E472A8C1 /* AppearanceSettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CCA1F28EC43A7E710B6864 /* AppearanceSettingsTab.swift */; };
+		6DF83057CB13EC28827DC866 /* TOTPSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2A5E25AF093E22F65E5303 /* TOTPSetupView.swift */; };
 		721134DD2F05B72E5976B688 /* OPVaultCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C4DC38AA1CA5C7F6AE899C /* OPVaultCategory.swift */; };
 		75B5B59A2A5409D81B1E01F5 /* OPVaultConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764DF7CE0AC91C7B6A162E56 /* OPVaultConnection.swift */; };
 		79F9296D57187BBC5F9EA1E8 /* OPVaultCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780DA2FF62C35BA7C3AB67A3 /* OPVaultCrypto.swift */; };
@@ -50,10 +54,12 @@
 		D45FA9545F199FB2CE19948F /* OPVaultLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F16204A8BB206CBA10FF1DF /* OPVaultLocatorTests.swift */; };
 		D846234022F6D5B2BE63DCFF /* ItemCountStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB50AC56D5076C795992000 /* ItemCountStatusBar.swift */; };
 		D874AF34B15F23F0789CD182 /* OPVaultLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3361AB5AE9EC19D3210736F4 /* OPVaultLocator.swift */; };
+		DAB347C9CBDBE0510E0C9AFA /* SearchRanking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13630C9EE8E468DABE64C7B7 /* SearchRanking.swift */; };
 		DAD65D9191BF87A7B3A5337C /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7FC2E253A09057C9DB63FA3 /* MainView.swift */; };
 		DE74D6B45203A759B5D4F5E3 /* KeyDerivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C15FF2831989CE7223F61C /* KeyDerivation.swift */; };
 		EA13776228850166A386A463 /* InlineSearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA27CE2C607274947D23305 /* InlineSearchField.swift */; };
 		EB10D8FF9A502462287A98D5 /* OPVaultServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413BBD2BB7D3A00090F25FC8 /* OPVaultServiceTests.swift */; };
+		F82C54D2D3B6770A476E9030 /* SearchRankingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D2FAA044458CCE38F743CA /* SearchRankingTests.swift */; };
 		FFFAFD6A968EC517FC890088 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BF585D420F5C445B70FB34 /* ContentView.swift */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +79,7 @@
 		0C623C218F78B3B5B465869E /* OPVaultSectionFieldsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultSectionFieldsTests.swift; sourceTree = "<group>"; };
 		0EE99F3416C7AA4A0EB04D16 /* OPVaultItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultItemListView.swift; sourceTree = "<group>"; };
 		10C15FF2831989CE7223F61C /* KeyDerivation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyDerivation.swift; sourceTree = "<group>"; };
+		13630C9EE8E468DABE64C7B7 /* SearchRanking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRanking.swift; sourceTree = "<group>"; };
 		27F546B9315E6B77CC76A46E /* OnePassholeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnePassholeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		283D004B364E4D5219BC9857 /* GeneralSettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsTab.swift; sourceTree = "<group>"; };
 		2C61D4C64EE44D1527803782 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -99,7 +106,10 @@
 		8011A134816547A62166477B /* VaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultService.swift; sourceTree = "<group>"; };
 		84B59FA866C4EF8E880112E8 /* Selection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Selection.swift; sourceTree = "<group>"; };
 		916444FCD24AB0465FCBDA45 /* OPVaultJSONValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultJSONValue.swift; sourceTree = "<group>"; };
+		92D2FAA044458CCE38F743CA /* SearchRankingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchRankingTests.swift; sourceTree = "<group>"; };
 		9A471DC84D4A6A1D8EA8D09F /* PasswordGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorView.swift; sourceTree = "<group>"; };
+		9E2A5E25AF093E22F65E5303 /* TOTPSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTPSetupView.swift; sourceTree = "<group>"; };
+		AB72D12231040726A56990CC /* TOTPGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTPGenerator.swift; sourceTree = "<group>"; };
 		B4E22DA83C2960CECE2B3A54 /* OPVaultFileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultFileStore.swift; sourceTree = "<group>"; };
 		B7C4DC38AA1CA5C7F6AE899C /* OPVaultCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultCategory.swift; sourceTree = "<group>"; };
 		B7FC2E253A09057C9DB63FA3 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -110,8 +120,10 @@
 		D3C87D74E18F72BD116387CE /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
 		D738B9344575603FE0B0D3D9 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D9608F2E52397926B99EADF5 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		DAFFD3B3F885716C9D2BA048 /* TOTPFieldRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTPFieldRow.swift; sourceTree = "<group>"; };
 		E4E90349AD50AA540E98C421 /* ItemEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditView.swift; sourceTree = "<group>"; };
 		EEE8F19854432CD8ED449355 /* OPVaultItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultItemDetailView.swift; sourceTree = "<group>"; };
+		EFD3776CFD596CB3411CB449 /* TOTPGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TOTPGeneratorTests.swift; sourceTree = "<group>"; };
 		F2BF585D420F5C445B70FB34 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F40237264A136F3981537D86 /* OPVaultCryptoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultCryptoTests.swift; sourceTree = "<group>"; };
 		F9ABB94729D50D6429451FAE /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -160,6 +172,8 @@
 				3F16204A8BB206CBA10FF1DF /* OPVaultLocatorTests.swift */,
 				0C623C218F78B3B5B465869E /* OPVaultSectionFieldsTests.swift */,
 				413BBD2BB7D3A00090F25FC8 /* OPVaultServiceTests.swift */,
+				92D2FAA044458CCE38F743CA /* SearchRankingTests.swift */,
+				EFD3776CFD596CB3411CB449 /* TOTPGeneratorTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -174,6 +188,7 @@
 				3361AB5AE9EC19D3210736F4 /* OPVaultLocator.swift */,
 				40E7293952C5140351F8C417 /* OPVaultService.swift */,
 				CC3DC9FE93163650549A873E /* PasswordGenerator.swift */,
+				AB72D12231040726A56990CC /* TOTPGenerator.swift */,
 				8011A134816547A62166477B /* VaultService.swift */,
 			);
 			path = Services;
@@ -186,6 +201,7 @@
 				501F856CDCA5010D654205DD /* ItemTemplates.swift */,
 				B7C4DC38AA1CA5C7F6AE899C /* OPVaultCategory.swift */,
 				764DF7CE0AC91C7B6A162E56 /* OPVaultConnection.swift */,
+				13630C9EE8E468DABE64C7B7 /* SearchRanking.swift */,
 				84B59FA866C4EF8E880112E8 /* Selection.swift */,
 				36981751C47EC28B52757C75 /* Vault.swift */,
 			);
@@ -265,6 +281,8 @@
 				E4E90349AD50AA540E98C421 /* ItemEditView.swift */,
 				EEE8F19854432CD8ED449355 /* OPVaultItemDetailView.swift */,
 				38D0DC2F5AF14E9961E38D4B /* OPVaultItemEditView.swift */,
+				DAFFD3B3F885716C9D2BA048 /* TOTPFieldRow.swift */,
+				9E2A5E25AF093E22F65E5303 /* TOTPSetupView.swift */,
 			);
 			path = Items;
 			sourceTree = "<group>";
@@ -420,11 +438,15 @@
 				6C259C5D717F960ABA0A4616 /* OnePassholeApp.swift in Sources */,
 				C7780AF36615E3FABEA36EEA /* PasswordGenerator.swift in Sources */,
 				BF0C202406340050B8E251E2 /* PasswordGeneratorView.swift in Sources */,
+				DAB347C9CBDBE0510E0C9AFA /* SearchRanking.swift in Sources */,
 				7B6A2EB50B21A0F12D8A9A67 /* Selection.swift in Sources */,
 				3F7AACCBA76AF3BCADA27AE4 /* SettingsKey.swift in Sources */,
 				5CB12791B951CD0BFE26425D /* SettingsView.swift in Sources */,
 				47FE2C8007C726EB31BBCE6A /* SetupView.swift in Sources */,
 				0E08D3558971459075C22788 /* SymmetricKeyData.swift in Sources */,
+				6BAD9EA35A5DDBFEFA3421C0 /* TOTPFieldRow.swift in Sources */,
+				661B29F792DF5E9EC986E849 /* TOTPGenerator.swift in Sources */,
+				6DF83057CB13EC28827DC866 /* TOTPSetupView.swift in Sources */,
 				8D4EB0EC759FF5485418CD71 /* UnlockView.swift in Sources */,
 				0DDE934AC97CBDF9195D31C0 /* Vault.swift in Sources */,
 				3B7BA3A523E5A17A8274CE8D /* VaultService.swift in Sources */,
@@ -442,6 +464,8 @@
 				D45FA9545F199FB2CE19948F /* OPVaultLocatorTests.swift in Sources */,
 				CFF6B586225256ED8B687051 /* OPVaultSectionFieldsTests.swift in Sources */,
 				EB10D8FF9A502462287A98D5 /* OPVaultServiceTests.swift in Sources */,
+				F82C54D2D3B6770A476E9030 /* SearchRankingTests.swift in Sources */,
+				461333A6DB652EFC85395B9F /* TOTPGeneratorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

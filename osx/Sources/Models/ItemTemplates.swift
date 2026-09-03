@@ -8,9 +8,9 @@ enum ItemTemplates {
         totpSecret: String? = nil
     ) -> ItemPayload {
         var fields = [
-            ItemField(label: "URL", value: url, type: .url),
             ItemField(label: "Username", value: username, type: .text),
             ItemField(label: "Password", value: password, type: .password, isConcealed: true),
+            ItemField(label: "URL", value: url, type: .url),
         ]
         if let totp = totpSecret {
             fields.append(ItemField(label: "One-Time Password", value: totp, type: .totp))
