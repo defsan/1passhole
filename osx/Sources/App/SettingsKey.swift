@@ -9,4 +9,5 @@ enum SettingsKey {
     static let sidebarIconSize = "settings.sidebarIconSize"
     static let compactMode = "settings.compactMode"
     static let storageMode = "settings.storageMode"
+    static let recentVaults = "settings.recentVaults"
 }

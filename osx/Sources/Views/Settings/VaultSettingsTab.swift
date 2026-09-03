@@ -25,6 +25,19 @@ struct VaultSettingsTab: View {
         FileManager.default.ubiquityIdentityToken != nil
     }
 
+    /// Resolves the persisted recent-vault refs against the live query results, dropping
+    /// any that point at a vault/connection since deleted.
+    private var recentVaultEntries: [SelectedVault] {
+        appState.recentVaults.compactMap { ref in
+            switch ref.kind {
+            case .native:
+                vaults.first { $0.id == ref.id }.map(SelectedVault.native)
+            case .opvault:
+                opvaultConnections.first { $0.id == ref.id }.map(SelectedVault.opvault)
+            }
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             Text("Vault")
@@ -95,6 +108,28 @@ struct VaultSettingsTab: View {
 
             Divider()
 
+            if !recentVaultEntries.isEmpty {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Recent Vaults")
+                        .font(.headline)
+
+                    ForEach(Array(recentVaultEntries.enumerated()), id: \.offset) { _, entry in
+                        HStack(spacing: 10) {
+                            Image(systemName: entry.iconName)
+                                .foregroundStyle(.tint)
+                            Text(entry.name)
+                            Spacer()
+                            Button("Switch To") {
+                                appState.switchVault(to: entry)
+                            }
+                            .disabled(appState.selectedVault == entry)
+                        }
+                    }
+                }
+
+                Divider()
+            }
+
             VStack(alignment: .leading, spacing: 16) {
                 Text("Vaults")
                     .font(.headline)
@@ -106,9 +141,9 @@ struct VaultSettingsTab: View {
                         Text(vault.name)
                         Spacer()
                         Button("Switch To") {
-                            appState.selectedVault = .native(vault)
+                            appState.switchVault(to: .native(vault))
                         }
-                        .disabled(!isUnlocked || appState.selectedVault == .native(vault))
+                        .disabled(appState.selectedVault == .native(vault))
                         Button("Rename…") {
                             renameText = vault.name
                             vaultToRename = vault
@@ -162,9 +197,9 @@ struct VaultSettingsTab: View {
                         }
                         Spacer()
                         Button("Switch To") {
-                            appState.selectedVault = .opvault(connection)
+                            appState.switchVault(to: .opvault(connection))
                         }
-                        .disabled(!isUnlocked || appState.selectedVault == .opvault(connection))
+                        .disabled(appState.selectedVault == .opvault(connection))
                         Button("Disconnect", role: .destructive) {
                             disconnectOPVault(connection)
                         }
@@ -303,7 +338,7 @@ struct VaultSettingsTab: View {
             )
             appState.modelContainer.mainContext.insert(connection)
             try appState.modelContainer.mainContext.save()
-            appState.selectedVault = .opvault(connection)
+            appState.switchVault(to: .opvault(connection))
         } catch {
             opvaultError = error.localizedDescription
         }

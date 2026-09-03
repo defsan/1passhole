@@ -11,10 +11,21 @@ final class AppState: @unchecked Sendable {
         case needsSetup
     }
 
+    /// One entry in the recently-switched-to vault list, persisted across launches.
+    /// Stores just enough to re-resolve against the live `Vault`/`OPVaultConnection`
+    /// query results — the referenced object may since have been deleted, in which case
+    /// the entry is silently skipped when displaying the list.
+    struct RecentVaultRef: Codable, Equatable {
+        enum Kind: String, Codable { case native, opvault }
+        let kind: Kind
+        let id: UUID
+    }
+
     var lockState: LockState
     var selectedVault: SelectedVault?
     var selectedItem: SelectedItem?
     var opvaultSessions: [UUID: OPVaultSession] = [:]
+    private(set) var recentVaults: [RecentVaultRef] = []
 
     let modelContainer: ModelContainer
     let cryptoEngine: CryptoEngine
@@ -41,6 +52,7 @@ final class AppState: @unchecked Sendable {
             self.lockState = hasOPVaultConnection ? .locked : .needsSetup
         }
         setupLockObservers()
+        loadRecentVaults()
 
         if storageMode == "icloud" {
             setupRemoteChangeObserver()
@@ -111,6 +123,45 @@ final class AppState: @unchecked Sendable {
         if selectedVault == nil {
             selectedVault = defaultVaultSelection()
         }
+    }
+
+    /// The one place `selectedVault` should be changed from — switching away from a live
+    /// OPVault session locks it first (drops the session, so its password is required
+    /// again next time) rather than leaving decrypted vault material sitting in memory
+    /// for a vault that's no longer even in view. Safe to call while the app itself is
+    /// still locked: it only touches selection/session state, never the crypto engine.
+    func switchVault(to newSelection: SelectedVault?) {
+        guard newSelection != selectedVault else { return }
+        if case .opvault(let current)? = selectedVault {
+            opvaultSessions.removeValue(forKey: current.id)
+        }
+        selectedVault = newSelection
+        selectedItem = nil
+        recordRecentVault(newSelection)
+    }
+
+    private func recordRecentVault(_ selection: SelectedVault?) {
+        let ref: RecentVaultRef
+        switch selection {
+        case .native(let vault): ref = RecentVaultRef(kind: .native, id: vault.id)
+        case .opvault(let connection): ref = RecentVaultRef(kind: .opvault, id: connection.id)
+        case nil: return
+        }
+        recentVaults.removeAll { $0 == ref }
+        recentVaults.insert(ref, at: 0)
+        if recentVaults.count > 5 {
+            recentVaults.removeLast(recentVaults.count - 5)
+        }
+        if let data = try? JSONEncoder().encode(recentVaults) {
+            UserDefaults.standard.set(data, forKey: SettingsKey.recentVaults)
+        }
+    }
+
+    private func loadRecentVaults() {
+        guard let data = UserDefaults.standard.data(forKey: SettingsKey.recentVaults),
+              let decoded = try? JSONDecoder().decode([RecentVaultRef].self, from: data)
+        else { return }
+        recentVaults = decoded
     }
 
     private func defaultVaultSelection() -> SelectedVault? {
