@@ -1,6 +1,8 @@
 # 1Passhole
 
 A native macOS password manager, heavily inspired by 1Password. Open-source, auditable, and built on zero-knowledge encryption.
+<img width="1203" height="901" alt="image" src="https://github.com/user-attachments/assets/94233833-3219-44dc-afba-c20b64f33d54" />
+
 
 ## What it does
 
