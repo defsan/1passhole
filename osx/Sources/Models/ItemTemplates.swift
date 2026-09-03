@@ -53,4 +53,10 @@ enum ItemTemplates {
     static func secureNote(content: String = "") -> ItemPayload {
         ItemPayload(fields: [], notes: content)
     }
+
+    static func password(value: String = "") -> ItemPayload {
+        ItemPayload(fields: [
+            ItemField(label: "password", value: value, type: .password, isConcealed: true),
+        ])
+    }
 }

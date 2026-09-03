@@ -61,7 +61,7 @@ struct ItemEditView: View {
 
                     if !isEditing {
                         Picker("Type", selection: $selectedType) {
-                            ForEach(ItemType.allCases, id: \.self) { type in
+                            ForEach([ItemType.login, .creditCard, .identity, .secureNote], id: \.self) { type in
                                 Label(type.displayName, systemImage: type.iconName)
                                     .tag(type)
                             }
@@ -236,6 +236,7 @@ struct ItemEditView: View {
         case .creditCard: template = ItemTemplates.creditCard()
         case .identity: template = ItemTemplates.identity()
         case .secureNote: template = ItemTemplates.secureNote()
+        case .password: template = ItemTemplates.password()
         }
         fields = template.fields
         notes = template.notes ?? ""

@@ -75,6 +75,27 @@ final class VaultService {
         return try crypto.decryptPayload(from: item.encryptedPayload, using: vaultKey)
     }
 
+    /// Pretty-printed JSON of the decrypted item, verbatim, for debugging — the exact
+    /// plaintext structure that gets encrypted into `encryptedPayload`, plus the
+    /// unencrypted metadata columns alongside it.
+    func debugJSON(for item: Item) throws -> String {
+        let payload = try decryptItem(item)
+        let blob = ItemDebugBlob(
+            id: item.id,
+            title: item.title,
+            type: item.type,
+            createdAt: item.createdAt,
+            modifiedAt: item.modifiedAt,
+            vaultID: item.vault?.id,
+            payload: payload
+        )
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        encoder.dateEncodingStrategy = .iso8601
+        let data = try encoder.encode(blob)
+        return String(data: data, encoding: .utf8) ?? "{}"
+    }
+
     func fetchItems(in vault: Vault? = nil, matching search: String = "") throws -> [Item] {
         var predicate: Predicate<Item>?
         if let vault {
@@ -97,4 +118,14 @@ final class VaultService {
         descriptor.fetchLimit = 500
         return try modelContext.fetch(descriptor)
     }
+}
+
+private struct ItemDebugBlob: Encodable {
+    let id: UUID
+    let title: String
+    let type: ItemType
+    let createdAt: Date
+    let modifiedAt: Date
+    let vaultID: UUID?
+    let payload: ItemPayload
 }

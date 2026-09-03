@@ -77,20 +77,56 @@ struct MainView: View {
         @Bindable var state = appState
         switch appState.selectedVault {
         case .native(let vault):
-            ItemListView(vault: vault, selectedItem: nativeSelectedItemBinding, searchFocusTrigger: searchFocusTrigger)
+            ItemListView(
+                vault: vault,
+                selectedItem: nativeSelectedItemBinding,
+                searchFocusTrigger: searchFocusTrigger,
+                onEdit: editNativeItem,
+                onDelete: deleteNativeItem
+            )
         case .opvault(let connection):
             if let session = appState.opvaultSessions[connection.id] {
                 OPVaultItemListView(
                     session: session,
                     selectedItem: $state.selectedItem,
                     refreshToken: opvaultRefreshToken,
-                    searchFocusTrigger: searchFocusTrigger
+                    searchFocusTrigger: searchFocusTrigger,
+                    onEdit: editOPVaultItem,
+                    onDelete: { deleteOPVaultItem($0, session: session) }
                 )
             } else {
                 OPVaultUnlockView(connection: connection)
             }
         case nil:
             ItemListView(vault: nil, selectedItem: nativeSelectedItemBinding, searchFocusTrigger: searchFocusTrigger)
+        }
+    }
+
+    private func editNativeItem(_ item: Item) {
+        appState.selectedItem = .native(item)
+        detailMode = .editing(.native(item))
+    }
+
+    private func deleteNativeItem(_ item: Item) {
+        let service = VaultService(modelContext: appState.modelContainer.mainContext, crypto: appState.cryptoEngine)
+        try? service.deleteItem(item)
+        if appState.selectedItem == .native(item) {
+            appState.selectedItem = nil
+            detailMode = .viewing
+        }
+    }
+
+    private func editOPVaultItem(_ item: OPVaultItemSummary) {
+        appState.selectedItem = .opvault(item)
+        detailMode = .editing(.opvault(item))
+    }
+
+    private func deleteOPVaultItem(_ item: OPVaultItemSummary, session: OPVaultSession) {
+        try? OPVaultService.trashItem(session: session, uuid: item.uuid)
+        opvaultRefreshToken += 1
+        if appState.selectedItem == .opvault(item) {
+            appState.selectedItem = nil
+            detailMode = .viewing
         }
     }
 

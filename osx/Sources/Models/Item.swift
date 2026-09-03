@@ -6,6 +6,7 @@ enum ItemType: String, Codable, CaseIterable {
     case creditCard
     case identity
     case secureNote
+    case password
 }
 
 @Model

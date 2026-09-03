@@ -232,6 +232,7 @@ struct OPVaultItemEditView: View {
         case .creditCard: template = ItemTemplates.creditCard()
         case .identity: template = ItemTemplates.identity()
         case .secureNote: template = ItemTemplates.secureNote()
+        case .password: template = ItemTemplates.password()
         }
         fields = template.fields
         notes = template.notes ?? ""

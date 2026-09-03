@@ -13,6 +13,7 @@ enum OPVaultCategory {
         case "002": .creditCard
         case "003": .secureNote
         case "004": .identity
+        case "005": .password
         default: .secureNote
         }
     }
@@ -23,6 +24,7 @@ enum OPVaultCategory {
         case .creditCard: "002"
         case .secureNote: "003"
         case .identity: "004"
+        case .password: "005"
         }
     }
 

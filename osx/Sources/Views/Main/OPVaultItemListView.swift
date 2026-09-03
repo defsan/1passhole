@@ -18,6 +18,8 @@ struct OPVaultItemListView: View {
     @Binding var selectedItem: SelectedItem?
     var refreshToken: Int = 0
     var searchFocusTrigger: Int = 0
+    var onEdit: (OPVaultItemSummary) -> Void = { _ in }
+    var onDelete: (OPVaultItemSummary) -> Void = { _ in }
 
     @State private var entries: [SearchableEntry] = []
     @State private var searchQuery = ""
@@ -43,8 +45,14 @@ struct OPVaultItemListView: View {
 
             List(selection: $selectedItem) {
                 ForEach(filteredEntries, id: \.summary.id) { entry in
-                    OPVaultItemRow(item: entry.summary, usernamePreview: entry.usernamePreview)
-                        .tag(SelectedItem.opvault(entry.summary))
+                    OPVaultItemRow(
+                        item: entry.summary,
+                        usernamePreview: entry.usernamePreview,
+                        session: session,
+                        onEdit: onEdit,
+                        onDelete: onDelete
+                    )
+                    .tag(SelectedItem.opvault(entry.summary))
                 }
             }
             .listStyle(.inset)
@@ -85,8 +93,12 @@ struct OPVaultItemListView: View {
 struct OPVaultItemRow: View {
     let item: OPVaultItemSummary
     var usernamePreview: String?
+    let session: OPVaultSession
+    var onEdit: (OPVaultItemSummary) -> Void = { _ in }
+    var onDelete: (OPVaultItemSummary) -> Void = { _ in }
 
     @AppStorage(SettingsKey.compactMode) private var compactMode: Bool = false
+    @State private var showDeleteConfirm = false
 
     var body: some View {
         HStack(spacing: 10) {
@@ -109,5 +121,53 @@ struct OPVaultItemRow: View {
             }
         }
         .padding(.vertical, compactMode ? 0 : 2)
+        .contextMenu {
+            Button {
+                onEdit(item)
+            } label: {
+                Label("Edit", systemImage: "pencil")
+            }
+
+            Button {
+                copyPassword()
+            } label: {
+                Label("Copy Password", systemImage: "key")
+            }
+
+            Button {
+                copyBlob()
+            } label: {
+                Label("Copy Blob", systemImage: "curlybraces")
+            }
+
+            Divider()
+
+            Button(role: .destructive) {
+                showDeleteConfirm = true
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+        }
+        .confirmationDialog(
+            "Delete “\(item.title)”?",
+            isPresented: $showDeleteConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("Delete", role: .destructive) {
+                onDelete(item)
+            }
+        }
+    }
+
+    private func copyPassword() {
+        guard let payload = try? OPVaultService.decryptPayload(session: session, uuid: item.uuid),
+              let password = payload.fields.first(where: { $0.type == .password })
+        else { return }
+        ClipboardService.copy(password.value)
+    }
+
+    private func copyBlob() {
+        guard let json = try? OPVaultService.debugJSON(session: session, uuid: item.uuid) else { return }
+        ClipboardService.copy(json)
     }
 }

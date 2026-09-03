@@ -221,6 +221,16 @@ enum OPVaultService {
             }
         }
 
+        // Category-005 "Password" items (a bare secret with no username) store their
+        // value directly as a top-level `password` string, not in `fields` or `sections`
+        // at all — without this fallback those items decrypt to an empty field list and
+        // render as blank. Only synthesize it when no password field was already found,
+        // so this never duplicates one that came through the normal paths above.
+        if !fields.contains(where: { $0.type == .password }),
+           let password = obj["password"]?.stringValue, !password.isEmpty {
+            fields.insert(ItemField(label: "password", value: password, type: .password, isConcealed: true), at: 0)
+        }
+
         let notes = obj["notesPlain"]?.stringValue
         return ItemPayload(fields: fields, notes: (notes?.isEmpty ?? true) ? nil : notes)
     }
@@ -451,6 +461,38 @@ enum OPVaultService {
         try OPVaultFileStore.mutateBand(profileDir: session.profileDir, letter: letter) { band in
             band[upperUUID] = item
         }
+    }
+
+    // MARK: - Debug
+
+    /// Pretty-printed JSON of the item exactly as stored on disk, for debugging: the raw
+    /// band record (category/uuid/timestamps/trashed) plus its decrypted `details` blob
+    /// verbatim — unlike `decryptPayload`, this skips the lossy mapping into `ItemPayload`
+    /// so nothing (sections, passwordHistory, etc.) is dropped.
+    static func debugJSON(session: OPVaultSession, uuid: String) throws -> String {
+        guard let item = OPVaultFileStore.findItem(profileDir: session.profileDir, uuid: uuid) else {
+            throw OPVaultServiceError.itemNotFound
+        }
+        guard let kBlob = Data(base64Encoded: item.k) else { throw OPVaultServiceError.itemNotFound }
+        let (itemEnc, itemMac) = try OPVaultCrypto.unwrapItemKey(masterEnc: session.masterEnc, masterMac: session.masterMac, blob: kBlob)
+
+        guard let dBlob = Data(base64Encoded: item.d) else { throw OPVaultServiceError.itemNotFound }
+        let plain = try OPVaultCrypto.opdata01Decrypt(dBlob, encKey: itemEnc, macKey: itemMac)
+        let details = try JSONDecoder().decode(OPVaultJSONValue.self, from: plain)
+
+        let blob: [String: OPVaultJSONValue] = [
+            "uuid": .string(item.uuid),
+            "category": .string(item.category),
+            "created": .number(Double(item.created)),
+            "updated": .number(Double(item.updated)),
+            "trashed": .bool(item.trashed ?? false),
+            "details": details,
+        ]
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(OPVaultJSONValue.object(blob))
+        return String(data: data, encoding: .utf8) ?? "{}"
     }
 
     // MARK: - Soft delete

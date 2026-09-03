@@ -5,6 +5,8 @@ struct ItemListView: View {
     let vault: Vault?
     @Binding var selectedItem: Item?
     var searchFocusTrigger: Int = 0
+    var onEdit: (Item) -> Void = { _ in }
+    var onDelete: (Item) -> Void = { _ in }
 
     @Environment(AppState.self) private var appState
     @Query(sort: \Item.modifiedAt, order: .reverse) private var allItems: [Item]
@@ -49,7 +51,7 @@ struct ItemListView: View {
 
             List(selection: $selectedItem) {
                 ForEach(filteredItems) { item in
-                    ItemRow(item: item)
+                    ItemRow(item: item, onEdit: onEdit, onDelete: onDelete)
                         .tag(item)
                 }
             }
@@ -87,9 +89,16 @@ struct ItemListView: View {
 
 struct ItemRow: View {
     let item: Item
+    var onEdit: (Item) -> Void = { _ in }
+    var onDelete: (Item) -> Void = { _ in }
 
     @Environment(AppState.self) private var appState
     @AppStorage(SettingsKey.compactMode) private var compactMode: Bool = false
+    @State private var showDeleteConfirm = false
+
+    private var vaultService: VaultService {
+        VaultService(modelContext: appState.modelContainer.mainContext, crypto: appState.cryptoEngine)
+    }
 
     /// Username if the item has one, else the item type — computed on demand rather than
     /// cached, which is fine at native-vault sizes (typically dozens to low hundreds).
@@ -125,6 +134,54 @@ struct ItemRow: View {
             }
         }
         .padding(.vertical, compactMode ? 0 : 2)
+        .contextMenu {
+            Button {
+                onEdit(item)
+            } label: {
+                Label("Edit", systemImage: "pencil")
+            }
+
+            Button {
+                copyPassword()
+            } label: {
+                Label("Copy Password", systemImage: "key")
+            }
+
+            Button {
+                copyBlob()
+            } label: {
+                Label("Copy Blob", systemImage: "curlybraces")
+            }
+
+            Divider()
+
+            Button(role: .destructive) {
+                showDeleteConfirm = true
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+        }
+        .confirmationDialog(
+            "Delete “\(item.title)”?",
+            isPresented: $showDeleteConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("Delete", role: .destructive) {
+                onDelete(item)
+            }
+        }
+    }
+
+    private func copyPassword() {
+        guard let payload = try? vaultService.decryptItem(item),
+              let password = payload.fields.first(where: { $0.type == .password })
+        else { return }
+        ClipboardService.copy(password.value)
+    }
+
+    private func copyBlob() {
+        guard let json = try? vaultService.debugJSON(for: item) else { return }
+        ClipboardService.copy(json)
     }
 }
 
@@ -135,6 +192,7 @@ extension ItemType {
         case .creditCard: "creditcard"
         case .identity: "person.text.rectangle"
         case .secureNote: "note.text"
+        case .password: "key"
         }
     }
 
@@ -144,6 +202,7 @@ extension ItemType {
         case .creditCard: "Credit Card"
         case .identity: "Identity"
         case .secureNote: "Secure Note"
+        case .password: "Password"
         }
     }
 }
