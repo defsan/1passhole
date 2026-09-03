@@ -67,6 +67,7 @@ struct SettingsView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, 6)
                     .padding(.horizontal, 8)
+                    .contentShape(Rectangle())
                     .background {
                         if selectedTab == tab {
                             RoundedRectangle(cornerRadius: 6)
