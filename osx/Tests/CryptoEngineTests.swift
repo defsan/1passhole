@@ -24,7 +24,7 @@ struct CryptoEngineTests {
 
         let ciphertext = try engine.encrypt(plaintext, using: key1.symmetricKey)
         #expect(throws: CryptoError.self) {
-            try engine.decrypt(ciphertext, using: key2.symmetricKey)
+            _ = try engine.decrypt(ciphertext, using: key2.symmetricKey)
         }
     }
 
@@ -85,7 +85,7 @@ struct CryptoEngineTests {
         #expect(!engine.isUnlocked)
 
         #expect(throws: CryptoError.self) {
-            try engine.generateEncryptedVaultKey()
+            _ = try engine.generateEncryptedVaultKey()
         }
     }
 }
@@ -104,7 +104,8 @@ struct PasswordGeneratorTests {
             digits: true,
             symbols: false
         )
-        #expect(digitsOnly.allSatisfy(\.isNumber))
+        let allNumeric = digitsOnly.allSatisfy(\.isNumber)
+        #expect(allNumeric)
     }
 
     @Test func passphraseWordCount() {

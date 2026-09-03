@@ -11,6 +11,8 @@ struct UnlockView: View {
 
     @FocusState private var passwordFocused: Bool
 
+    private let passwordPrompt = "Enter Your Master Password"
+
     var body: some View {
         HStack(spacing: 0) {
             // Left panel — app icon
@@ -68,9 +70,9 @@ struct UnlockView: View {
                         HStack(spacing: 4) {
                             Group {
                                 if showPassword {
-                                    TextField("Enter your password", text: $password)
+                                    TextField(passwordPrompt, text: $password)
                                 } else {
-                                    SecureField("Enter your password", text: $password)
+                                    SecureField(passwordPrompt, text: $password)
                                 }
                             }
                             .focused($passwordFocused)
@@ -104,13 +106,13 @@ struct UnlockView: View {
                             .buttonStyle(.plain)
                             .disabled(password.isEmpty || isProcessing)
                         }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 16)
                         .background {
                             RoundedRectangle(cornerRadius: 10)
                                 .strokeBorder(.separator, lineWidth: 1)
                         }
-                        .frame(width: 320)
+                        .frame(width: 384)
 
                         if let errorMessage {
                             Text(errorMessage)
@@ -130,7 +132,7 @@ struct UnlockView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(minWidth: 560, minHeight: 380)
+        .frame(minWidth: 680, minHeight: 380)
         .onAppear {
             passwordFocused = true
             if appState.authService.isTouchIDEnrolled && !attemptedTouchID {
@@ -147,14 +149,29 @@ struct UnlockView: View {
 
         Task {
             do {
-                let masterKey = try appState.authService.unlock(password: password)
-                appState.unlock(with: masterKey)
+                if appState.isOPVaultPrimary {
+                    try unlockOPVaultPrimary(password: password)
+                } else {
+                    let masterKey = try appState.authService.unlock(password: password)
+                    appState.unlock(with: masterKey)
+                }
                 password = ""
             } catch {
                 errorMessage = error.localizedDescription
             }
             isProcessing = false
         }
+    }
+
+    /// The connected OPVault's own password is 1passhole's only password in this mode —
+    /// unlocking it re-derives the same native key that was enrolled at setup.
+    private func unlockOPVaultPrimary(password: String) throws {
+        guard let connection = appState.primaryOPVaultConnection() else {
+            throw OPVaultServiceError.itemNotFound
+        }
+        let session = try OPVaultService.unlock(connection: connection, password: password)
+        appState.unlock(with: session.derivedNativeMasterKey())
+        appState.opvaultSessions[connection.id] = session
     }
 
     private func unlockWithTouchID() {
@@ -165,6 +182,9 @@ struct UnlockView: View {
         Task {
             do {
                 let masterKey = try await appState.authService.unlockWithTouchID()
+                // `appState.unlock` selects the default vault, but Touch ID only restores
+                // the derived key, not a live OPVault session (that needs the real
+                // password) — its own unlock prompt appears once the vault is opened.
                 appState.unlock(with: masterKey)
             } catch {
                 errorMessage = "Touch ID failed. Enter your password."

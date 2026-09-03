@@ -1,0 +1,16 @@
+# Build output
+osx/build/
+DerivedData/
+
+# Xcode user-specific state (breakpoints, window layout, per-machine, causes merge conflicts)
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# Xcode / Swift Package Manager local caches
+.build/
+.swiftpm/
+*.xcresult
+
+# macOS
+.DS_Store

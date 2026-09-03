@@ -44,6 +44,15 @@ final class Item {
 struct ItemPayload: Codable {
     var fields: [ItemField]
     var notes: String?
+
+    /// First field that looks like a username, for list-row previews. Never a
+    /// concealed/password field.
+    var usernamePreview: String? {
+        fields.first {
+            !$0.isConcealed && $0.type != .password &&
+                ($0.label.localizedCaseInsensitiveCompare("username") == .orderedSame || $0.type == .email)
+        }.map(\.value).flatMap { $0.isEmpty ? nil : $0 }
+    }
 }
 
 struct ItemField: Codable, Identifiable {
@@ -53,12 +62,22 @@ struct ItemField: Codable, Identifiable {
     var type: FieldType
     var isConcealed: Bool
 
-    init(label: String, value: String, type: FieldType = .text, isConcealed: Bool = false) {
+    /// Where this field actually lives in an OPVault item's `details` JSON, when it came
+    /// from a nested `sections` entry rather than the flat top-level `fields` array — e.g.
+    /// `"3.user[login]"` (section index 3, original field id `user[login]`). `nil` for
+    /// every native field and every flat OPVault field. Preserved through edits so a
+    /// value change writes back into that exact original slot instead of being flattened
+    /// into the top-level array, which would duplicate/misplace it and break the
+    /// section's structure for other 1Password clients.
+    var sectionSourceKey: String?
+
+    init(label: String, value: String, type: FieldType = .text, isConcealed: Bool = false, sectionSourceKey: String? = nil) {
         self.id = UUID()
         self.label = label
         self.value = value
         self.type = type
         self.isConcealed = isConcealed
+        self.sectionSourceKey = sectionSourceKey
     }
 }
 

@@ -3,32 +3,33 @@ import SwiftData
 
 enum DetailMode: Equatable {
     case viewing
-    case editing(Item)
+    case editing(SelectedItem)
     case creating
 }
 
 struct MainView: View {
     @Environment(AppState.self) private var appState
-    @State private var searchText = ""
     @State private var detailMode: DetailMode = .viewing
-    var body: some View {
-        @Bindable var state = appState
+    @State private var opvaultRefreshToken = 0
+    @State private var searchFocusTrigger = 0
 
+    var body: some View {
         NavigationSplitView {
-            SidebarView(selectedVault: $state.selectedVault)
-                .navigationSplitViewColumnWidth(min: 180, ideal: 220, max: 280)
-        } content: {
-            ItemListView(
-                vault: appState.selectedVault,
-                searchText: searchText,
-                selectedItem: $state.selectedItem
-            )
-            .navigationSplitViewColumnWidth(min: 220, ideal: 280, max: 360)
+            contentColumn
+                .navigationSplitViewColumnWidth(min: 240, ideal: 300, max: 400)
         } detail: {
             detailPanel
         }
-        .searchable(text: $searchText, prompt: "Search items")
         .toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button {
+                    searchFocusTrigger += 1
+                } label: {
+                    Label("Search", systemImage: "magnifyingglass")
+                }
+                .keyboardShortcut("k", modifiers: .command)
+            }
+
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     createNewItem()
@@ -57,15 +58,59 @@ struct MainView: View {
         detailMode = .creating
     }
 
+    /// Adapts `AppState.selectedItem` (the `SelectedItem` enum) to the plain `Item?`
+    /// binding the unmodified native `ItemListView` expects.
+    private var nativeSelectedItemBinding: Binding<Item?> {
+        Binding(
+            get: {
+                if case .native(let item)? = appState.selectedItem { return item }
+                return nil
+            },
+            set: { newValue in
+                appState.selectedItem = newValue.map { SelectedItem.native($0) }
+            }
+        )
+    }
+
+    @ViewBuilder
+    private var contentColumn: some View {
+        @Bindable var state = appState
+        switch appState.selectedVault {
+        case .native(let vault):
+            ItemListView(vault: vault, selectedItem: nativeSelectedItemBinding, searchFocusTrigger: searchFocusTrigger)
+        case .opvault(let connection):
+            if let session = appState.opvaultSessions[connection.id] {
+                OPVaultItemListView(
+                    session: session,
+                    selectedItem: $state.selectedItem,
+                    refreshToken: opvaultRefreshToken,
+                    searchFocusTrigger: searchFocusTrigger
+                )
+            } else {
+                OPVaultUnlockView(connection: connection)
+            }
+        case nil:
+            ItemListView(vault: nil, selectedItem: nativeSelectedItemBinding, searchFocusTrigger: searchFocusTrigger)
+        }
+    }
+
     @ViewBuilder
     private var detailPanel: some View {
         switch detailMode {
         case .viewing:
-            if let item = appState.selectedItem {
+            switch appState.selectedItem {
+            case .native(let item):
                 ItemDetailView(item: item) {
-                    detailMode = .editing(item)
+                    detailMode = .editing(.native(item))
                 }
-            } else {
+            case .opvault(let summary):
+                if case .opvault(let connection)? = appState.selectedVault,
+                   let session = appState.opvaultSessions[connection.id] {
+                    OPVaultItemDetailView(session: session, item: summary) {
+                        detailMode = .editing(.opvault(summary))
+                    }
+                }
+            case nil:
                 ContentUnavailableView(
                     "No Item Selected",
                     systemImage: "key",
@@ -73,18 +118,41 @@ struct MainView: View {
                 )
             }
 
-        case .editing(let item):
-            if let vault = item.vault {
-                ItemEditView(vault: vault, mode: .edit(item)) {
-                    detailMode = .viewing
+        case .editing(let selected):
+            switch selected {
+            case .native(let item):
+                if let vault = item.vault {
+                    ItemEditView(vault: vault, mode: .edit(item)) {
+                        detailMode = .viewing
+                    }
+                }
+            case .opvault(let summary):
+                if case .opvault(let connection)? = appState.selectedVault,
+                   let session = appState.opvaultSessions[connection.id] {
+                    OPVaultItemEditView(session: session, mode: .edit(summary)) { updated in
+                        appState.selectedItem = updated.map { SelectedItem.opvault($0) }
+                        opvaultRefreshToken += 1
+                        detailMode = .viewing
+                    }
                 }
             }
 
         case .creating:
-            if let vault = appState.selectedVault {
+            switch appState.selectedVault {
+            case .native(let vault):
                 ItemEditView(vault: vault, mode: .create) {
                     detailMode = .viewing
                 }
+            case .opvault(let connection):
+                if let session = appState.opvaultSessions[connection.id] {
+                    OPVaultItemEditView(session: session, mode: .create) { created in
+                        appState.selectedItem = created.map { SelectedItem.opvault($0) }
+                        opvaultRefreshToken += 1
+                        detailMode = .viewing
+                    }
+                }
+            case nil:
+                EmptyView()
             }
         }
     }

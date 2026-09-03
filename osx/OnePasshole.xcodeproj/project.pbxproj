@@ -8,32 +8,52 @@
 
 /* Begin PBXBuildFile section */
 		03987E398786387464383A16 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAB25588E749BEB68DF8A8B /* Item.swift */; };
+		0A945327B2404327F03A3868 /* OPVaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E7293952C5140351F8C417 /* OPVaultService.swift */; };
 		0B66D1BA66C6C1FC80B6A7A8 /* ItemTemplates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501F856CDCA5010D654205DD /* ItemTemplates.swift */; };
+		0C8A1AE95474391350969954 /* OPVaultUnlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF964AB653BD4E763B153FAF /* OPVaultUnlockView.swift */; };
 		0DDE934AC97CBDF9195D31C0 /* Vault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36981751C47EC28B52757C75 /* Vault.swift */; };
 		0E08D3558971459075C22788 /* SymmetricKeyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C3CF7887081566C4BFDA16 /* SymmetricKeyData.swift */; };
 		1DE02CAE68D1DC6D760D256B /* CryptoEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA342AE88E2ED4848EF27BB /* CryptoEngine.swift */; };
 		33BC22822095305D70397498 /* GeneralSettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283D004B364E4D5219BC9857 /* GeneralSettingsTab.swift */; };
+		366F92C2E6AB735F4DF56529 /* OPVaultFileStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499645A7AC54BDC6E328A3B3 /* OPVaultFileStoreTests.swift */; };
 		3929F5B09C2E793FDC2CF2F0 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9608F2E52397926B99EADF5 /* AuthService.swift */; };
 		3B7BA3A523E5A17A8274CE8D /* VaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8011A134816547A62166477B /* VaultService.swift */; };
+		3F2830EC4A603D8AABC5E243 /* OPVaultItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE99F3416C7AA4A0EB04D16 /* OPVaultItemListView.swift */; };
 		3F7AACCBA76AF3BCADA27AE4 /* SettingsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE19CEA4B549C5C0B4F7ADF0 /* SettingsKey.swift */; };
 		4203CB8768381FF3C389CF56 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C87D74E18F72BD116387CE /* ItemDetailView.swift */; };
 		47FE2C8007C726EB31BBCE6A /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABC107A137BF2CFCB925931 /* SetupView.swift */; };
+		4C838B58BD2560E76ABF4FD6 /* OPVaultItemEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D0DC2F5AF14E9961E38D4B /* OPVaultItemEditView.swift */; };
 		55550296DE1C66123DC0CA0A /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9ABB94729D50D6429451FAE /* AppState.swift */; };
+		55E0504D856EB39810ABF24D /* OPVaultCryptoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40237264A136F3981537D86 /* OPVaultCryptoTests.swift */; };
+		590C39F8E583E7B88304D6AE /* OPVaultItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEE8F19854432CD8ED449355 /* OPVaultItemDetailView.swift */; };
 		5CB12791B951CD0BFE26425D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D738B9344575603FE0B0D3D9 /* SettingsView.swift */; };
 		66FE7E9186E2729FCEAEE715 /* CryptoEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58E0CB28677B2BAF282500BA /* CryptoEngineTests.swift */; };
 		6A0A5FD9EEC1C41E4AFAEEE4 /* ClipboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB79ACDC19E19A0E699973A /* ClipboardService.swift */; };
 		6C259C5D717F960ABA0A4616 /* OnePassholeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AC6F29FBFF4206988F387B6 /* OnePassholeApp.swift */; };
 		6D8DCDCA91D07D61E472A8C1 /* AppearanceSettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03CCA1F28EC43A7E710B6864 /* AppearanceSettingsTab.swift */; };
+		721134DD2F05B72E5976B688 /* OPVaultCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7C4DC38AA1CA5C7F6AE899C /* OPVaultCategory.swift */; };
+		75B5B59A2A5409D81B1E01F5 /* OPVaultConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 764DF7CE0AC91C7B6A162E56 /* OPVaultConnection.swift */; };
+		79F9296D57187BBC5F9EA1E8 /* OPVaultCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 780DA2FF62C35BA7C3AB67A3 /* OPVaultCrypto.swift */; };
+		7B6A2EB50B21A0F12D8A9A67 /* Selection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B59FA866C4EF8E880112E8 /* Selection.swift */; };
+		8B5B9760966D371FC4404241 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339D15B623069ED595AC0007 /* AppDelegate.swift */; };
 		8D4EB0EC759FF5485418CD71 /* UnlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4287216D8BEA18112DA4BA7D /* UnlockView.swift */; };
-		A675F9385DEB0253F0861824 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8FA989D08482472FFB32A2 /* SidebarView.swift */; };
+		90245D6500C01B0F2C5FF0A3 /* OPVaultFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E22DA83C2960CECE2B3A54 /* OPVaultFileStore.swift */; };
+		9DEB84B41175AB835F407E04 /* OPVaultJSONValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 916444FCD24AB0465FCBDA45 /* OPVaultJSONValue.swift */; };
 		A7F018E0624359D8B21DB635 /* Argon2Swift in Frameworks */ = {isa = PBXBuildFile; productRef = 1AB11541CF0B829238535084 /* Argon2Swift */; };
 		B3DF560A4C3D7C5D05057EED /* ItemEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4E90349AD50AA540E98C421 /* ItemEditView.swift */; };
 		B5E1BA315E6B694B84AAC9BC /* VaultSettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7481281D26293771D51F395B /* VaultSettingsTab.swift */; };
+		B85EED283303D5997CAEEBC2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C61D4C64EE44D1527803782 /* Assets.xcassets */; };
 		BF0C202406340050B8E251E2 /* PasswordGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A471DC84D4A6A1D8EA8D09F /* PasswordGeneratorView.swift */; };
 		C557E167141C109ECD63B319 /* ItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710CC94574B44313E66B3AEE /* ItemListView.swift */; };
 		C7780AF36615E3FABEA36EEA /* PasswordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC3DC9FE93163650549A873E /* PasswordGenerator.swift */; };
+		CFF6B586225256ED8B687051 /* OPVaultSectionFieldsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C623C218F78B3B5B465869E /* OPVaultSectionFieldsTests.swift */; };
+		D45FA9545F199FB2CE19948F /* OPVaultLocatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F16204A8BB206CBA10FF1DF /* OPVaultLocatorTests.swift */; };
+		D846234022F6D5B2BE63DCFF /* ItemCountStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BB50AC56D5076C795992000 /* ItemCountStatusBar.swift */; };
+		D874AF34B15F23F0789CD182 /* OPVaultLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3361AB5AE9EC19D3210736F4 /* OPVaultLocator.swift */; };
 		DAD65D9191BF87A7B3A5337C /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7FC2E253A09057C9DB63FA3 /* MainView.swift */; };
 		DE74D6B45203A759B5D4F5E3 /* KeyDerivation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C15FF2831989CE7223F61C /* KeyDerivation.swift */; };
+		EA13776228850166A386A463 /* InlineSearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA27CE2C607274947D23305 /* InlineSearchField.swift */; };
+		EB10D8FF9A502462287A98D5 /* OPVaultServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413BBD2BB7D3A00090F25FC8 /* OPVaultServiceTests.swift */; };
 		FFFAFD6A968EC517FC890088 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BF585D420F5C445B70FB34 /* ContentView.swift */; };
 /* End PBXBuildFile section */
 
@@ -50,33 +70,53 @@
 /* Begin PBXFileReference section */
 		03CCA1F28EC43A7E710B6864 /* AppearanceSettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsTab.swift; sourceTree = "<group>"; };
 		04B3AD48E1677D256A26A5DE /* 1passhole.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 1passhole.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C623C218F78B3B5B465869E /* OPVaultSectionFieldsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultSectionFieldsTests.swift; sourceTree = "<group>"; };
+		0EE99F3416C7AA4A0EB04D16 /* OPVaultItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultItemListView.swift; sourceTree = "<group>"; };
 		10C15FF2831989CE7223F61C /* KeyDerivation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyDerivation.swift; sourceTree = "<group>"; };
 		27F546B9315E6B77CC76A46E /* OnePassholeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnePassholeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		283D004B364E4D5219BC9857 /* GeneralSettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsTab.swift; sourceTree = "<group>"; };
+		2C61D4C64EE44D1527803782 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3361AB5AE9EC19D3210736F4 /* OPVaultLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultLocator.swift; sourceTree = "<group>"; };
+		339D15B623069ED595AC0007 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		36981751C47EC28B52757C75 /* Vault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vault.swift; sourceTree = "<group>"; };
+		38D0DC2F5AF14E9961E38D4B /* OPVaultItemEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultItemEditView.swift; sourceTree = "<group>"; };
+		3F16204A8BB206CBA10FF1DF /* OPVaultLocatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultLocatorTests.swift; sourceTree = "<group>"; };
+		40E7293952C5140351F8C417 /* OPVaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultService.swift; sourceTree = "<group>"; };
+		413BBD2BB7D3A00090F25FC8 /* OPVaultServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultServiceTests.swift; sourceTree = "<group>"; };
 		4287216D8BEA18112DA4BA7D /* UnlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockView.swift; sourceTree = "<group>"; };
-		4B8FA989D08482472FFB32A2 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		499645A7AC54BDC6E328A3B3 /* OPVaultFileStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultFileStoreTests.swift; sourceTree = "<group>"; };
 		4EA342AE88E2ED4848EF27BB /* CryptoEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoEngine.swift; sourceTree = "<group>"; };
 		501F856CDCA5010D654205DD /* ItemTemplates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTemplates.swift; sourceTree = "<group>"; };
 		58E0CB28677B2BAF282500BA /* CryptoEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoEngineTests.swift; sourceTree = "<group>"; };
 		5AC6F29FBFF4206988F387B6 /* OnePassholeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnePassholeApp.swift; sourceTree = "<group>"; };
+		5BB50AC56D5076C795992000 /* ItemCountStatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCountStatusBar.swift; sourceTree = "<group>"; };
 		710CC94574B44313E66B3AEE /* ItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListView.swift; sourceTree = "<group>"; };
 		7481281D26293771D51F395B /* VaultSettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultSettingsTab.swift; sourceTree = "<group>"; };
+		764DF7CE0AC91C7B6A162E56 /* OPVaultConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultConnection.swift; sourceTree = "<group>"; };
+		780DA2FF62C35BA7C3AB67A3 /* OPVaultCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultCrypto.swift; sourceTree = "<group>"; };
 		79C3CF7887081566C4BFDA16 /* SymmetricKeyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetricKeyData.swift; sourceTree = "<group>"; };
 		7ABC107A137BF2CFCB925931 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		8011A134816547A62166477B /* VaultService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultService.swift; sourceTree = "<group>"; };
+		84B59FA866C4EF8E880112E8 /* Selection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Selection.swift; sourceTree = "<group>"; };
+		916444FCD24AB0465FCBDA45 /* OPVaultJSONValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultJSONValue.swift; sourceTree = "<group>"; };
 		9A471DC84D4A6A1D8EA8D09F /* PasswordGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorView.swift; sourceTree = "<group>"; };
+		B4E22DA83C2960CECE2B3A54 /* OPVaultFileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultFileStore.swift; sourceTree = "<group>"; };
+		B7C4DC38AA1CA5C7F6AE899C /* OPVaultCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultCategory.swift; sourceTree = "<group>"; };
 		B7FC2E253A09057C9DB63FA3 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		BFB79ACDC19E19A0E699973A /* ClipboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardService.swift; sourceTree = "<group>"; };
 		CC3DC9FE93163650549A873E /* PasswordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGenerator.swift; sourceTree = "<group>"; };
 		CE19CEA4B549C5C0B4F7ADF0 /* SettingsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsKey.swift; sourceTree = "<group>"; };
+		CFA27CE2C607274947D23305 /* InlineSearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineSearchField.swift; sourceTree = "<group>"; };
 		D3C87D74E18F72BD116387CE /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
 		D738B9344575603FE0B0D3D9 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		D9608F2E52397926B99EADF5 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		E4E90349AD50AA540E98C421 /* ItemEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditView.swift; sourceTree = "<group>"; };
+		EEE8F19854432CD8ED449355 /* OPVaultItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultItemDetailView.swift; sourceTree = "<group>"; };
 		F2BF585D420F5C445B70FB34 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		F40237264A136F3981537D86 /* OPVaultCryptoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultCryptoTests.swift; sourceTree = "<group>"; };
 		F9ABB94729D50D6429451FAE /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		FAAB25588E749BEB68DF8A8B /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		FF964AB653BD4E763B153FAF /* OPVaultUnlockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultUnlockView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,9 +142,11 @@
 		2EEB1971FB9510D00C98449E /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				CFA27CE2C607274947D23305 /* InlineSearchField.swift */,
+				5BB50AC56D5076C795992000 /* ItemCountStatusBar.swift */,
 				710CC94574B44313E66B3AEE /* ItemListView.swift */,
 				B7FC2E253A09057C9DB63FA3 /* MainView.swift */,
-				4B8FA989D08482472FFB32A2 /* SidebarView.swift */,
+				0EE99F3416C7AA4A0EB04D16 /* OPVaultItemListView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -113,6 +155,11 @@
 			isa = PBXGroup;
 			children = (
 				58E0CB28677B2BAF282500BA /* CryptoEngineTests.swift */,
+				F40237264A136F3981537D86 /* OPVaultCryptoTests.swift */,
+				499645A7AC54BDC6E328A3B3 /* OPVaultFileStoreTests.swift */,
+				3F16204A8BB206CBA10FF1DF /* OPVaultLocatorTests.swift */,
+				0C623C218F78B3B5B465869E /* OPVaultSectionFieldsTests.swift */,
+				413BBD2BB7D3A00090F25FC8 /* OPVaultServiceTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -122,6 +169,10 @@
 			children = (
 				D9608F2E52397926B99EADF5 /* AuthService.swift */,
 				BFB79ACDC19E19A0E699973A /* ClipboardService.swift */,
+				B4E22DA83C2960CECE2B3A54 /* OPVaultFileStore.swift */,
+				916444FCD24AB0465FCBDA45 /* OPVaultJSONValue.swift */,
+				3361AB5AE9EC19D3210736F4 /* OPVaultLocator.swift */,
+				40E7293952C5140351F8C417 /* OPVaultService.swift */,
 				CC3DC9FE93163650549A873E /* PasswordGenerator.swift */,
 				8011A134816547A62166477B /* VaultService.swift */,
 			);
@@ -133,6 +184,9 @@
 			children = (
 				FAAB25588E749BEB68DF8A8B /* Item.swift */,
 				501F856CDCA5010D654205DD /* ItemTemplates.swift */,
+				B7C4DC38AA1CA5C7F6AE899C /* OPVaultCategory.swift */,
+				764DF7CE0AC91C7B6A162E56 /* OPVaultConnection.swift */,
+				84B59FA866C4EF8E880112E8 /* Selection.swift */,
 				36981751C47EC28B52757C75 /* Vault.swift */,
 			);
 			path = Models;
@@ -143,6 +197,7 @@
 			children = (
 				4EA342AE88E2ED4848EF27BB /* CryptoEngine.swift */,
 				10C15FF2831989CE7223F61C /* KeyDerivation.swift */,
+				780DA2FF62C35BA7C3AB67A3 /* OPVaultCrypto.swift */,
 				79C3CF7887081566C4BFDA16 /* SymmetricKeyData.swift */,
 			);
 			path = Crypto;
@@ -163,6 +218,7 @@
 		6E0CCDCC54ADF6B4F0EF95D9 /* Unlock */ = {
 			isa = PBXGroup;
 			children = (
+				FF964AB653BD4E763B153FAF /* OPVaultUnlockView.swift */,
 				7ABC107A137BF2CFCB925931 /* SetupView.swift */,
 				4287216D8BEA18112DA4BA7D /* UnlockView.swift */,
 			);
@@ -172,6 +228,7 @@
 		8408E06EE3EE8005829A7D2F = {
 			isa = PBXGroup;
 			children = (
+				DE22C1A3D3D31035AB5878CD /* Resources */,
 				BC60D56D9AC6F4040F794A4F /* Sources */,
 				3C84FCFEB2ECDA5196B3B56F /* Tests */,
 				B545D274611329CFEB4733B1 /* Products */,
@@ -181,6 +238,7 @@
 		8ECA9855C886495E630D5EE7 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				339D15B623069ED595AC0007 /* AppDelegate.swift */,
 				F9ABB94729D50D6429451FAE /* AppState.swift */,
 				F2BF585D420F5C445B70FB34 /* ContentView.swift */,
 				5AC6F29FBFF4206988F387B6 /* OnePassholeApp.swift */,
@@ -205,6 +263,8 @@
 			children = (
 				D3C87D74E18F72BD116387CE /* ItemDetailView.swift */,
 				E4E90349AD50AA540E98C421 /* ItemEditView.swift */,
+				EEE8F19854432CD8ED449355 /* OPVaultItemDetailView.swift */,
+				38D0DC2F5AF14E9961E38D4B /* OPVaultItemEditView.swift */,
 			);
 			path = Items;
 			sourceTree = "<group>";
@@ -230,6 +290,14 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		DE22C1A3D3D31035AB5878CD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2C61D4C64EE44D1527803782 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -238,6 +306,7 @@
 			buildConfigurationList = EDDB3AB33DF2D9AAF216CD0C /* Build configuration list for PBXNativeTarget "OnePasshole" */;
 			buildPhases = (
 				022DAF4900126B0A3F23BC02 /* Sources */,
+				F0E9ADB1934B799B38254006 /* Resources */,
 				D92B5B7008F1C60390FBD6C5 /* Frameworks */,
 			);
 			buildRules = (
@@ -304,11 +373,23 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		F0E9ADB1934B799B38254006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B85EED283303D5997CAEEBC2 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		022DAF4900126B0A3F23BC02 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B5B9760966D371FC4404241 /* AppDelegate.swift in Sources */,
 				55550296DE1C66123DC0CA0A /* AppState.swift in Sources */,
 				6D8DCDCA91D07D61E472A8C1 /* AppearanceSettingsTab.swift in Sources */,
 				3929F5B09C2E793FDC2CF2F0 /* AuthService.swift in Sources */,
@@ -316,20 +397,33 @@
 				FFFAFD6A968EC517FC890088 /* ContentView.swift in Sources */,
 				1DE02CAE68D1DC6D760D256B /* CryptoEngine.swift in Sources */,
 				33BC22822095305D70397498 /* GeneralSettingsTab.swift in Sources */,
+				EA13776228850166A386A463 /* InlineSearchField.swift in Sources */,
 				03987E398786387464383A16 /* Item.swift in Sources */,
+				D846234022F6D5B2BE63DCFF /* ItemCountStatusBar.swift in Sources */,
 				4203CB8768381FF3C389CF56 /* ItemDetailView.swift in Sources */,
 				B3DF560A4C3D7C5D05057EED /* ItemEditView.swift in Sources */,
 				C557E167141C109ECD63B319 /* ItemListView.swift in Sources */,
 				0B66D1BA66C6C1FC80B6A7A8 /* ItemTemplates.swift in Sources */,
 				DE74D6B45203A759B5D4F5E3 /* KeyDerivation.swift in Sources */,
 				DAD65D9191BF87A7B3A5337C /* MainView.swift in Sources */,
+				721134DD2F05B72E5976B688 /* OPVaultCategory.swift in Sources */,
+				75B5B59A2A5409D81B1E01F5 /* OPVaultConnection.swift in Sources */,
+				79F9296D57187BBC5F9EA1E8 /* OPVaultCrypto.swift in Sources */,
+				90245D6500C01B0F2C5FF0A3 /* OPVaultFileStore.swift in Sources */,
+				590C39F8E583E7B88304D6AE /* OPVaultItemDetailView.swift in Sources */,
+				4C838B58BD2560E76ABF4FD6 /* OPVaultItemEditView.swift in Sources */,
+				3F2830EC4A603D8AABC5E243 /* OPVaultItemListView.swift in Sources */,
+				9DEB84B41175AB835F407E04 /* OPVaultJSONValue.swift in Sources */,
+				D874AF34B15F23F0789CD182 /* OPVaultLocator.swift in Sources */,
+				0A945327B2404327F03A3868 /* OPVaultService.swift in Sources */,
+				0C8A1AE95474391350969954 /* OPVaultUnlockView.swift in Sources */,
 				6C259C5D717F960ABA0A4616 /* OnePassholeApp.swift in Sources */,
 				C7780AF36615E3FABEA36EEA /* PasswordGenerator.swift in Sources */,
 				BF0C202406340050B8E251E2 /* PasswordGeneratorView.swift in Sources */,
+				7B6A2EB50B21A0F12D8A9A67 /* Selection.swift in Sources */,
 				3F7AACCBA76AF3BCADA27AE4 /* SettingsKey.swift in Sources */,
 				5CB12791B951CD0BFE26425D /* SettingsView.swift in Sources */,
 				47FE2C8007C726EB31BBCE6A /* SetupView.swift in Sources */,
-				A675F9385DEB0253F0861824 /* SidebarView.swift in Sources */,
 				0E08D3558971459075C22788 /* SymmetricKeyData.swift in Sources */,
 				8D4EB0EC759FF5485418CD71 /* UnlockView.swift in Sources */,
 				0DDE934AC97CBDF9195D31C0 /* Vault.swift in Sources */,
@@ -343,6 +437,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				66FE7E9186E2729FCEAEE715 /* CryptoEngineTests.swift in Sources */,
+				55E0504D856EB39810ABF24D /* OPVaultCryptoTests.swift in Sources */,
+				366F92C2E6AB735F4DF56529 /* OPVaultFileStoreTests.swift in Sources */,
+				D45FA9545F199FB2CE19948F /* OPVaultLocatorTests.swift in Sources */,
+				CFF6B586225256ED8B687051 /* OPVaultSectionFieldsTests.swift in Sources */,
+				EB10D8FF9A502462287A98D5 /* OPVaultServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -442,6 +541,7 @@
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.1passhole.osx;
+				PRODUCT_MODULE_NAME = OnePasshole;
 				PRODUCT_NAME = 1passhole;
 				SDKROOT = macosx;
 			};
@@ -459,6 +559,7 @@
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.1passhole.osx;
+				PRODUCT_MODULE_NAME = OnePasshole;
 				PRODUCT_NAME = 1passhole;
 				SDKROOT = macosx;
 			};

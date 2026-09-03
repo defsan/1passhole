@@ -3,6 +3,7 @@ import SwiftData
 
 @main
 struct OnePassholeApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var appState = AppState()
 
     init() {
@@ -34,6 +35,7 @@ struct OnePassholeApp: App {
         Settings {
             SettingsView()
                 .environment(appState)
+                .modelContainer(appState.modelContainer)
         }
     }
 }

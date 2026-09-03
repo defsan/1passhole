@@ -1,12 +1,21 @@
 import SwiftUI
+import SwiftData
 import AppKit
 
 struct VaultSettingsTab: View {
     @Environment(AppState.self) private var appState
+    @Query(sort: \Vault.name) private var vaults: [Vault]
+    @Query(sort: \OPVaultConnection.name) private var opvaultConnections: [OPVaultConnection]
     @AppStorage(SettingsKey.storageMode) private var storageMode: String = "local"
     @State private var touchIDEnabled = false
     @State private var errorMessage: String?
     @State private var showRestartAlert = false
+    @State private var opvaultError: String?
+    @State private var vaultError: String?
+    @State private var showingNewVault = false
+    @State private var newVaultName = ""
+    @State private var vaultToRename: Vault?
+    @State private var renameText = ""
 
     private var isUnlocked: Bool {
         appState.lockState == .unlocked
@@ -83,6 +92,102 @@ struct VaultSettingsTab: View {
                     }
                 }
             }
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Vaults")
+                    .font(.headline)
+
+                ForEach(vaults) { vault in
+                    HStack(spacing: 10) {
+                        Image(systemName: vault.iconName)
+                            .foregroundStyle(.tint)
+                        Text(vault.name)
+                        Spacer()
+                        Button("Switch To") {
+                            appState.selectedVault = .native(vault)
+                        }
+                        .disabled(!isUnlocked || appState.selectedVault == .native(vault))
+                        Button("Rename…") {
+                            renameText = vault.name
+                            vaultToRename = vault
+                        }
+                        .disabled(!isUnlocked)
+                        Button("Delete", role: .destructive) {
+                            deleteVault(vault)
+                        }
+                        .disabled(!isUnlocked)
+                    }
+                }
+
+                Button("New Vault…") {
+                    newVaultName = ""
+                    showingNewVault = true
+                }
+                .disabled(!isUnlocked)
+
+                if !isUnlocked {
+                    Label("Unlock 1passhole to manage vaults.", systemImage: "lock.fill")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                if let vaultError {
+                    Label(vaultError, systemImage: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 16) {
+                Text("1Password Vault")
+                    .font(.headline)
+
+                Text("Connect an existing 1Password vault (.opvault, usually inside Dropbox) to browse and edit it live, alongside your native vaults.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                ForEach(opvaultConnections) { connection in
+                    HStack(spacing: 10) {
+                        Image(systemName: connection.iconName)
+                            .foregroundStyle(.tint)
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(connection.name)
+                            Text("Profile: \(connection.profileName)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Button("Switch To") {
+                            appState.selectedVault = .opvault(connection)
+                        }
+                        .disabled(!isUnlocked || appState.selectedVault == .opvault(connection))
+                        Button("Disconnect", role: .destructive) {
+                            disconnectOPVault(connection)
+                        }
+                    }
+                }
+
+                Button(opvaultConnections.isEmpty ? "Connect 1Password Vault…" : "Connect Another…") {
+                    connectOPVault()
+                }
+                .disabled(!isUnlocked)
+
+                if !isUnlocked {
+                    Label("Unlock 1passhole to manage 1Password vault connections.", systemImage: "lock.fill")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                if let opvaultError {
+                    Label(opvaultError, systemImage: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
         }
         .padding(24)
         .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -99,6 +204,61 @@ struct VaultSettingsTab: View {
             Button("Later", role: .cancel) { }
         } message: {
             Text("Quit and reopen 1passhole for the storage change to take effect.")
+        }
+        .alert("New Vault", isPresented: $showingNewVault) {
+            TextField("Vault name", text: $newVaultName)
+            Button("Create") { createVault() }
+            Button("Cancel", role: .cancel) { newVaultName = "" }
+        }
+        .alert(
+            "Rename Vault",
+            isPresented: Binding(
+                get: { vaultToRename != nil },
+                set: { if !$0 { vaultToRename = nil } }
+            )
+        ) {
+            TextField("Vault name", text: $renameText)
+            Button("Rename") {
+                if let vault = vaultToRename { renameVault(vault) }
+            }
+            Button("Cancel", role: .cancel) { vaultToRename = nil }
+        }
+    }
+
+    private func createVault() {
+        vaultError = nil
+        guard !newVaultName.isEmpty else { return }
+        let service = VaultService(modelContext: appState.modelContainer.mainContext, crypto: appState.cryptoEngine)
+        do {
+            _ = try service.createVault(name: newVaultName)
+        } catch {
+            vaultError = error.localizedDescription
+        }
+        newVaultName = ""
+    }
+
+    private func renameVault(_ vault: Vault) {
+        vaultError = nil
+        guard !renameText.isEmpty else { return }
+        let service = VaultService(modelContext: appState.modelContainer.mainContext, crypto: appState.cryptoEngine)
+        do {
+            try service.renameVault(vault, to: renameText)
+        } catch {
+            vaultError = error.localizedDescription
+        }
+        vaultToRename = nil
+    }
+
+    private func deleteVault(_ vault: Vault) {
+        vaultError = nil
+        let service = VaultService(modelContext: appState.modelContainer.mainContext, crypto: appState.cryptoEngine)
+        if appState.selectedVault == .native(vault) {
+            appState.selectedVault = nil
+        }
+        do {
+            try service.deleteVault(vault)
+        } catch {
+            vaultError = error.localizedDescription
         }
     }
 
@@ -120,5 +280,41 @@ struct VaultSettingsTab: View {
                 }
             }
         )
+    }
+
+    private func connectOPVault() {
+        opvaultError = nil
+        guard let pickedURL = OPVaultLocator.pickVaultFolder() else { return }
+        defer { pickedURL.stopAccessingSecurityScopedResource() }
+        let folderURL = OPVaultLocator.resolveVaultBundle(from: pickedURL)
+
+        let profiles = OPVaultLocator.profileNames(in: folderURL)
+        guard let profileName = profiles.first else {
+            opvaultError = "No 1Password profile found in that folder."
+            return
+        }
+
+        do {
+            let bookmark = try OPVaultLocator.makeBookmark(for: folderURL)
+            let connection = OPVaultConnection(
+                name: folderURL.deletingPathExtension().lastPathComponent,
+                bookmarkData: bookmark,
+                profileName: profileName
+            )
+            appState.modelContainer.mainContext.insert(connection)
+            try appState.modelContainer.mainContext.save()
+            appState.selectedVault = .opvault(connection)
+        } catch {
+            opvaultError = error.localizedDescription
+        }
+    }
+
+    private func disconnectOPVault(_ connection: OPVaultConnection) {
+        if appState.selectedVault == .opvault(connection) {
+            appState.selectedVault = nil
+        }
+        appState.opvaultSessions.removeValue(forKey: connection.id)
+        appState.modelContainer.mainContext.delete(connection)
+        try? appState.modelContainer.mainContext.save()
     }
 }

@@ -178,13 +178,13 @@ struct DetailFieldRow: View {
             Spacer()
 
             if isHovering {
-                HStack(spacing: 4) {
+                HStack(spacing: 8) {
                     if field.isConcealed {
                         Button {
                             onToggleReveal()
                         } label: {
                             Image(systemName: isRevealed ? "eye.slash" : "eye")
-                                .font(.caption)
+                                .font(.system(size: 24))
                         }
                         .buttonStyle(.borderless)
                     }
@@ -193,7 +193,7 @@ struct DetailFieldRow: View {
                         onCopy()
                     } label: {
                         Image(systemName: "doc.on.doc")
-                            .font(.caption)
+                            .font(.system(size: 24))
                     }
                     .buttonStyle(.borderless)
                 }

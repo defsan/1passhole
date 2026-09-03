@@ -12,6 +12,8 @@
 	</array>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
 	<key>com.apple.security.keychain-access-groups</key>
 	<array>
 		<string>$(AppIdentifierPrefix)com.1passhole.shared</string>
