@@ -4,10 +4,12 @@ import Foundation
 
 /// Covers OPVault "sections" fields (e.g. an id like `"user[login]"`) — previously
 /// completely invisible, since only the flat top-level `fields` array was read. This
-/// verifies both directions: reading surfaces them with a sensible label while
-/// remembering their exact original slot, and writing an edited value back updates only
-/// that slot in place, without duplicating it into the flat array or disturbing anything
-/// else in the section.
+/// verifies both directions: reading surfaces them with the original nested name
+/// (so the UI can group `user[login]` under `user` / `login`) while remembering their
+/// exact original slot, and writing an edited value back updates only that slot in
+/// place, without duplicating it into the flat array or disturbing anything else in
+/// the section. Nested *flat* field names (`data[pvpnetaccount][name]`) are also
+/// preserved through an edit so we never flatten them to just `name`.
 struct OPVaultSectionFieldsTests {
     private func makeSession(profileDir: URL) -> (session: OPVaultSession, itemEnc: Data, itemMac: Data) {
         let masterEnc = Data(repeating: 0x10, count: 32)
@@ -86,7 +88,9 @@ struct OPVaultSectionFieldsTests {
         #expect(flatField?.value == "flat-user")
 
         let sectionField = payload.fields.first { $0.sectionSourceKey != nil }
-        #expect(sectionField?.label == "User: Login")
+        #expect(sectionField?.label == "user[login]")
+        #expect(sectionField?.displayLabel == "login")
+        #expect(sectionField?.sectionSourceKey == "0.user[login]")
     }
 
     /// Real OPVault data isn't consistent about which key carries the bracket text — this
@@ -106,7 +110,8 @@ struct OPVaultSectionFieldsTests {
         let payload = try OPVaultService.decryptPayload(session: session, uuid: uuid)
         let sectionField = payload.fields.first { $0.sectionSourceKey != nil }
 
-        #expect(sectionField?.label == "User: Login")
+        #expect(sectionField?.label == "user[login]")
+        #expect(sectionField?.displayLabel == "login")
         #expect(sectionField?.sectionSourceKey == "0.field123") // still keyed by the stable id, not the title
     }
 
@@ -156,6 +161,103 @@ struct OPVaultSectionFieldsTests {
         let flatFields = obj["fields"]?.arrayValue ?? []
         let leaked = flatFields.contains { $0.objectValue?["name"]?.stringValue == "user[login]" }
         #expect(!leaked)
+    }
+
+    // MARK: - Nested flat field names
+
+    /// Form-style names like `data[pvpnetaccount][name]` live in the top-level `fields`
+    /// array as the field's `name`. Editing a value must write that exact name back —
+    /// never the display-only last segment (`name`).
+    private func writeItemWithNestedFlatFields(
+        session: OPVaultSession,
+        itemEnc: Data,
+        itemMac: Data,
+        profileDir: URL
+    ) throws -> String {
+        let uuid = "0DDDDDDDDDDD4D4DDDDDDDDDDDDD"
+
+        let overviewData = try JSONEncoder().encode(OPVaultJSONValue.object(["title": .string("Leagueoflegends")]))
+        let oBlob = OPVaultCrypto.opdata01Encrypt(plaintext: overviewData, encKey: session.overviewEnc, macKey: session.overviewMac)
+
+        let details: OPVaultJSONValue = .object([
+            "fields": .array([
+                .object(["name": .string("data[pvpnetaccount][name]"), "value": .string("zangato2"), "type": .string("T"), "designation": .string("")]),
+                .object(["name": .string("data[pvpnetaccount][password]"), "value": .string("secret"), "type": .string("P"), "designation": .string("password")]),
+                .object(["name": .string("data[pvpnetaccount][realm]"), "value": .string("na"), "type": .string("T"), "designation": .string("")]),
+                .object(["name": .string("commit"), "value": .string("Register"), "type": .string("T"), "designation": .string("")]),
+            ]),
+            "notesPlain": .string(""),
+        ])
+        let detailsData = try JSONEncoder().encode(details)
+        let dBlob = OPVaultCrypto.opdata01Encrypt(plaintext: detailsData, encKey: itemEnc, macKey: itemMac)
+        let kBlob = OPVaultCrypto.wrapItemKey(masterEnc: session.masterEnc, masterMac: session.masterMac, itemEnc: itemEnc, itemMac: itemMac)
+
+        let item = OPVaultRawItem(
+            category: "001", created: 1, updated: 1, tx: 1, fave: 0, trashed: nil,
+            uuid: uuid, k: kBlob.base64EncodedString(), o: oBlob.base64EncodedString(), d: dBlob.base64EncodedString(), hmac: nil
+        )
+        try OPVaultFileStore.mutateBand(profileDir: profileDir, letter: "0") { band in
+            band[uuid] = item
+        }
+        return uuid
+    }
+
+    @Test func nestedFlatFieldsKeepOriginalNamesAndGroupForDisplay() throws {
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tmp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tmp) }
+
+        let (session, itemEnc, itemMac) = makeSession(profileDir: tmp)
+        let uuid = try writeItemWithNestedFlatFields(session: session, itemEnc: itemEnc, itemMac: itemMac, profileDir: tmp)
+
+        let payload = try OPVaultService.decryptPayload(session: session, uuid: uuid)
+        #expect(payload.fields.map(\.label) == [
+            "data[pvpnetaccount][name]",
+            "data[pvpnetaccount][password]",
+            "data[pvpnetaccount][realm]",
+            "commit",
+        ])
+        #expect(payload.fields.map(\.displayLabel) == ["name", "password", "realm", "commit"])
+
+        let groups = FieldPath.groups(from: payload.fields)
+        #expect(groups.map(\.title) == ["data[pvpnetaccount]", nil])
+    }
+
+    @Test func editingNestedFlatFieldPreservesOriginalName() throws {
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: tmp, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tmp) }
+
+        let (session, itemEnc, itemMac) = makeSession(profileDir: tmp)
+        let uuid = try writeItemWithNestedFlatFields(session: session, itemEnc: itemEnc, itemMac: itemMac, profileDir: tmp)
+
+        var payload = try OPVaultService.decryptPayload(session: session, uuid: uuid)
+        guard let index = payload.fields.firstIndex(where: { $0.label == "data[pvpnetaccount][name]" }) else {
+            Issue.record("nested name field not found")
+            return
+        }
+        payload.fields[index].value = "new-summoner"
+
+        try OPVaultService.updateItem(session: session, uuid: uuid, title: "Leagueoflegends", payload: payload)
+
+        guard let rawItem = OPVaultFileStore.findItem(profileDir: tmp, uuid: uuid),
+              let dBlob = Data(base64Encoded: rawItem.d)
+        else {
+            Issue.record("item not found after update")
+            return
+        }
+        let plain = try OPVaultCrypto.opdata01Decrypt(dBlob, encKey: itemEnc, macKey: itemMac)
+        let details = try JSONDecoder().decode(OPVaultJSONValue.self, from: plain)
+        let flatFields = details.objectValue?["fields"]?.arrayValue ?? []
+
+        let nameField = flatFields.first { $0.objectValue?["name"]?.stringValue == "data[pvpnetaccount][name]" }
+        #expect(nameField?.objectValue?["value"]?.stringValue == "new-summoner")
+
+        let flattened = flatFields.contains { $0.objectValue?["name"]?.stringValue == "name" }
+        #expect(!flattened)
+
+        let passwordField = flatFields.first { $0.objectValue?["name"]?.stringValue == "data[pvpnetaccount][password]" }
+        #expect(passwordField?.objectValue?["value"]?.stringValue == "secret")
     }
 
     // MARK: - TOTP fields

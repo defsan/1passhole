@@ -172,10 +172,10 @@ enum OPVaultService {
         }
 
         // Section fields (identity/credit-card/custom items, etc.) aren't in the flat
-        // `fields` array at all — without this they're simply invisible. Some field ids
-        // use a "group[name]" convention (e.g. "user[login]"); when they do, that's
-        // reflected in the label, but the exact original section index + field id is
-        // always kept in `sectionSourceKey` so an edit writes back into that same slot.
+        // `fields` array at all — without this they're simply invisible. Nested names
+        // like `user[login]` are stored as-is on `label` so the UI can group them, while
+        // the exact original section index + field id is always kept in `sectionSourceKey`
+        // so an edit writes back into that same slot.
         if let sections = obj["sections"]?.arrayValue {
             for (sectionIndex, section) in sections.enumerated() {
                 guard let sectionObj = section.objectValue,
@@ -205,15 +205,13 @@ enum OPVaultService {
 
                     let kind = fieldObj["k"]?.stringValue ?? "string"
                     let title = fieldObj["t"]?.stringValue
-                    // The bracket text (e.g. "user[login]") can show up in either the
+                    // The nested path (e.g. "user[login]") can show up in either the
                     // field's id ("n") or its human title ("t") depending on the client
-                    // that wrote it — check both rather than assuming which one.
-                    let (group, displayLabel) = parseGroupedFieldName(
-                        candidates: [title, n].compactMap { $0 },
-                        fallback: (title?.isEmpty == false ? title! : n)
-                    )
+                    // that wrote it. Prefer a parseable path so the UI can group it;
+                    // otherwise the human title. Never rewrite the stored name.
+                    let label = nestedFieldLabel(candidates: [title, n].compactMap { $0 }, fallback: n)
                     fields.append(ItemField(
-                        label: group.map { "\($0): \(displayLabel)" } ?? displayLabel,
+                        label: label,
                         value: rawValue,
                         type: fieldType(forSectionKind: kind),
                         isConcealed: kind == "concealed",
@@ -227,24 +225,14 @@ enum OPVaultService {
         return ItemPayload(fields: fields, notes: (notes?.isEmpty ?? true) ? nil : notes)
     }
 
-    /// Recognizes the "group[name]" convention some section fields use (e.g.
-    /// `"user[login]"` → group "User", label "Login"), trying each candidate string in
-    /// order (typically the field's title, then its id) and using whichever one actually
-    /// matches that shape. Falls back to `fallback` when none of them do.
-    private static func parseGroupedFieldName(candidates: [String], fallback: String) -> (group: String?, label: String) {
-        for candidate in candidates {
-            guard let openBracket = candidate.firstIndex(of: "["),
-                  candidate.hasSuffix("]"),
-                  openBracket != candidate.startIndex
-            else { continue }
-            let group = String(candidate[candidate.startIndex..<openBracket])
-            let innerRange = candidate.index(after: openBracket)..<candidate.index(before: candidate.endIndex)
-            guard innerRange.lowerBound < innerRange.upperBound else { continue }
-            let inner = String(candidate[innerRange])
-            guard !group.isEmpty, !inner.isEmpty else { continue }
-            return (group.capitalized, inner.capitalized)
+    /// Picks the string the UI should keep as `ItemField.label`. A nested path is
+    /// preferred (so grouping works) over a human title; `fallback` is the field id.
+    private static func nestedFieldLabel(candidates: [String], fallback: String) -> String {
+        let nonempty = candidates.filter { !$0.isEmpty }
+        if let path = nonempty.first(where: { FieldPath.parse($0) != nil }) {
+            return path
         }
-        return (nil, fallback)
+        return nonempty.first ?? fallback
     }
 
     private static func fieldType(forSectionKind kind: String) -> FieldType {

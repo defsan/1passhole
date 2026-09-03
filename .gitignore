@@ -1,4 +1,5 @@
 # Build output
+build/
 osx/build/
 DerivedData/
 

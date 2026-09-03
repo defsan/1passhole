@@ -46,36 +46,7 @@ struct OPVaultItemDetailView: View {
                 if let payload {
                     let primaryFields = payload.fields.filter { $0.type != .url }
                     if !primaryFields.isEmpty {
-                        GroupBox {
-                            VStack(spacing: 0) {
-                                ForEach(Array(primaryFields.enumerated()), id: \.element.id) { index, field in
-                                    if index > 0 {
-                                        Divider()
-                                    }
-                                    if field.type == .totp {
-                                        TOTPFieldRow(field: field, onCopy: { code in
-                                            ClipboardService.copy(code)
-                                        })
-                                    } else {
-                                        DetailFieldRow(
-                                            field: field,
-                                            isRevealed: revealedFields.contains(field.id),
-                                            onToggleReveal: {
-                                                if revealedFields.contains(field.id) {
-                                                    revealedFields.remove(field.id)
-                                                } else {
-                                                    revealedFields.insert(field.id)
-                                                }
-                                            },
-                                            onCopy: {
-                                                ClipboardService.copy(field.value)
-                                            }
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                        .groupBoxStyle(CardGroupBoxStyle())
+                        GroupedDetailFields(fields: primaryFields, revealedFields: $revealedFields)
                     }
 
                     if let notes = payload.notes, !notes.isEmpty {

@@ -46,43 +46,14 @@ struct ItemDetailView: View {
                     // Primary fields card (concealed + text fields)
                     let primaryFields = payload.fields.filter { $0.type != .url }
                     if !primaryFields.isEmpty {
-                        GroupBox {
-                            VStack(spacing: 0) {
-                                ForEach(Array(primaryFields.enumerated()), id: \.element.id) { index, field in
-                                    if index > 0 {
-                                        Divider()
-                                    }
-                                    if field.type == .totp {
-                                        TOTPFieldRow(field: field, onCopy: { code in
-                                            ClipboardService.copy(code)
-                                        })
-                                    } else {
-                                        DetailFieldRow(
-                                            field: field,
-                                            isRevealed: revealedFields.contains(field.id),
-                                            onToggleReveal: {
-                                                if revealedFields.contains(field.id) {
-                                                    revealedFields.remove(field.id)
-                                                } else {
-                                                    revealedFields.insert(field.id)
-                                                }
-                                            },
-                                            onCopy: {
-                                                ClipboardService.copy(field.value)
-                                            }
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                        .groupBoxStyle(CardGroupBoxStyle())
+                        GroupedDetailFields(fields: primaryFields, revealedFields: $revealedFields)
                     }
 
                     // URL fields (outside card)
                     let urlFields = payload.fields.filter { $0.type == .url }
                     ForEach(urlFields) { field in
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(field.label.lowercased())
+                            Text(field.displayLabel.lowercased())
                                 .font(.subheadline)
                                 .foregroundStyle(.tint)
 
@@ -166,7 +137,7 @@ struct DetailFieldRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 8) {
             VStack(alignment: .leading, spacing: 3) {
-                Text(field.label.lowercased())
+                Text(field.displayLabel.lowercased())
                     .font(.subheadline)
                     .foregroundStyle(.tint)
 

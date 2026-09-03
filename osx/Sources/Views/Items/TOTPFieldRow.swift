@@ -24,7 +24,7 @@ struct TOTPFieldRow: View {
     private func row(code: String, remaining: Int, period: TimeInterval) -> some View {
         HStack(alignment: .top, spacing: 8) {
             VStack(alignment: .leading, spacing: 3) {
-                Text(field.label.lowercased())
+                Text(field.displayLabel.lowercased())
                     .font(.subheadline)
                     .foregroundStyle(.tint)
 
@@ -58,7 +58,7 @@ struct TOTPFieldRow: View {
     private var invalidRow: some View {
         HStack(alignment: .top, spacing: 8) {
             VStack(alignment: .leading, spacing: 3) {
-                Text(field.label.lowercased())
+                Text(field.displayLabel.lowercased())
                     .font(.subheadline)
                     .foregroundStyle(.tint)
                 Label("Invalid one-time password secret", systemImage: "exclamationmark.triangle")

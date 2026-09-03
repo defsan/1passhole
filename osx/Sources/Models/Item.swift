@@ -72,6 +72,9 @@ struct ItemPayload: Codable {
 
 struct ItemField: Codable, Identifiable {
     var id: UUID
+    /// Stored field name as it appears in the vault (e.g. `user[email]`). Display
+    /// grouping uses `displayLabel` / `FieldPath` and must not rewrite this, so an
+    /// edit writes the original name back.
     var label: String
     var value: String
     var type: FieldType

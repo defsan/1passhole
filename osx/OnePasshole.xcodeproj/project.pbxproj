@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		03987E398786387464383A16 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAB25588E749BEB68DF8A8B /* Item.swift */; };
 		0A945327B2404327F03A3868 /* OPVaultService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E7293952C5140351F8C417 /* OPVaultService.swift */; };
+		B11F1E1D1C1B1A1918171615 /* FieldPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11F1E1D1C1B1A1918171615 /* FieldPath.swift */; };
+		B22F2E2D2C2B2A2928272625 /* GroupedFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22F2E2D2C2B2A2928272625 /* GroupedFieldsView.swift */; };
+		B33F3E3D3C3B3A3938373635 /* FieldPathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33F3E3D3C3B3A3938373635 /* FieldPathTests.swift */; };
 		0B66D1BA66C6C1FC80B6A7A8 /* ItemTemplates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501F856CDCA5010D654205DD /* ItemTemplates.swift */; };
 		0C8A1AE95474391350969954 /* OPVaultUnlockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF964AB653BD4E763B153FAF /* OPVaultUnlockView.swift */; };
 		0DDE934AC97CBDF9195D31C0 /* Vault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36981751C47EC28B52757C75 /* Vault.swift */; };
@@ -75,6 +78,9 @@
 
 /* Begin PBXFileReference section */
 		03CCA1F28EC43A7E710B6864 /* AppearanceSettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettingsTab.swift; sourceTree = "<group>"; };
+		A11F1E1D1C1B1A1918171615 /* FieldPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldPath.swift; sourceTree = "<group>"; };
+		A22F2E2D2C2B2A2928272625 /* GroupedFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupedFieldsView.swift; sourceTree = "<group>"; };
+		A33F3E3D3C3B3A3938373635 /* FieldPathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldPathTests.swift; sourceTree = "<group>"; };
 		04B3AD48E1677D256A26A5DE /* 1passhole.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 1passhole.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C623C218F78B3B5B465869E /* OPVaultSectionFieldsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultSectionFieldsTests.swift; sourceTree = "<group>"; };
 		0EE99F3416C7AA4A0EB04D16 /* OPVaultItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OPVaultItemListView.swift; sourceTree = "<group>"; };
@@ -167,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				58E0CB28677B2BAF282500BA /* CryptoEngineTests.swift */,
+				A33F3E3D3C3B3A3938373635 /* FieldPathTests.swift */,
 				F40237264A136F3981537D86 /* OPVaultCryptoTests.swift */,
 				499645A7AC54BDC6E328A3B3 /* OPVaultFileStoreTests.swift */,
 				3F16204A8BB206CBA10FF1DF /* OPVaultLocatorTests.swift */,
@@ -198,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				FAAB25588E749BEB68DF8A8B /* Item.swift */,
+				A11F1E1D1C1B1A1918171615 /* FieldPath.swift */,
 				501F856CDCA5010D654205DD /* ItemTemplates.swift */,
 				B7C4DC38AA1CA5C7F6AE899C /* OPVaultCategory.swift */,
 				764DF7CE0AC91C7B6A162E56 /* OPVaultConnection.swift */,
@@ -278,6 +286,7 @@
 			isa = PBXGroup;
 			children = (
 				D3C87D74E18F72BD116387CE /* ItemDetailView.swift */,
+				A22F2E2D2C2B2A2928272625 /* GroupedFieldsView.swift */,
 				E4E90349AD50AA540E98C421 /* ItemEditView.swift */,
 				EEE8F19854432CD8ED449355 /* OPVaultItemDetailView.swift */,
 				38D0DC2F5AF14E9961E38D4B /* OPVaultItemEditView.swift */,
@@ -417,6 +426,8 @@
 				33BC22822095305D70397498 /* GeneralSettingsTab.swift in Sources */,
 				EA13776228850166A386A463 /* InlineSearchField.swift in Sources */,
 				03987E398786387464383A16 /* Item.swift in Sources */,
+				B11F1E1D1C1B1A1918171615 /* FieldPath.swift in Sources */,
+				B22F2E2D2C2B2A2928272625 /* GroupedFieldsView.swift in Sources */,
 				D846234022F6D5B2BE63DCFF /* ItemCountStatusBar.swift in Sources */,
 				4203CB8768381FF3C389CF56 /* ItemDetailView.swift in Sources */,
 				B3DF560A4C3D7C5D05057EED /* ItemEditView.swift in Sources */,
@@ -459,6 +470,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				66FE7E9186E2729FCEAEE715 /* CryptoEngineTests.swift in Sources */,
+				B33F3E3D3C3B3A3938373635 /* FieldPathTests.swift in Sources */,
 				55E0504D856EB39810ABF24D /* OPVaultCryptoTests.swift in Sources */,
 				366F92C2E6AB735F4DF56529 /* OPVaultFileStoreTests.swift in Sources */,
 				D45FA9545F199FB2CE19948F /* OPVaultLocatorTests.swift in Sources */,

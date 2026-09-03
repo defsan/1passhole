@@ -71,61 +71,69 @@ struct ItemEditView: View {
 
                     Divider()
 
-                    ForEach($fields) { $field in
-                        HStack(spacing: 8) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                if field.label.isEmpty {
-                                    TextField("Field name", text: $field.label)
-                                        .font(.caption.weight(.medium))
-                                        .foregroundStyle(.secondary)
-                                        .textCase(.uppercase)
-                                } else {
-                                    Text(field.label)
-                                        .font(.caption.weight(.medium))
-                                        .foregroundStyle(.secondary)
-                                        .textCase(.uppercase)
-                                }
+                    ForEach(Array(fields.enumerated()), id: \.element.id) { index, field in
+                        VStack(alignment: .leading, spacing: 4) {
+                            if let header = FieldPath.groupHeader(at: index, in: fields) {
+                                NestedFieldGroupHeader(title: header, isFirst: index == 0)
+                            }
 
-                                if field.type == .password {
-                                    HStack(spacing: 4) {
-                                        SecureField("Value", text: $field.value)
+                            HStack(spacing: 8) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    if field.label.isEmpty {
+                                        TextField("Field name", text: $fields[index].label)
+                                            .font(.caption.weight(.medium))
+                                            .foregroundStyle(.secondary)
+                                            .textCase(.uppercase)
+                                    } else {
+                                        // Display-only: nested paths show the last segment.
+                                        // `fields[index].label` stays the original name for save.
+                                        Text(field.displayLabel)
+                                            .font(.caption.weight(.medium))
+                                            .foregroundStyle(.secondary)
+                                            .textCase(.uppercase)
+                                    }
+
+                                    if field.type == .password {
+                                        HStack(spacing: 4) {
+                                            SecureField("Value", text: $fields[index].value)
+                                                .textFieldStyle(.roundedBorder)
+                                                .frame(height: fieldHeight)
+                                                .focused($focusedFieldID, equals: field.id)
+                                            Button {
+                                                showingGenerator = true
+                                            } label: {
+                                                Image(systemName: "wand.and.stars")
+                                            }
+                                            .buttonStyle(.bordered)
+                                        }
+                                    } else if field.type == .totp {
+                                        HStack(spacing: 4) {
+                                            Text(field.value.isEmpty ? "Not configured" : "One-Time Password configured")
+                                                .font(.body)
+                                                .foregroundStyle(.secondary)
+                                            Spacer()
+                                            Button("Replace") {
+                                                totpSetupFieldID = field.id
+                                                showingTOTPSetup = true
+                                            }
+                                            .buttonStyle(.bordered)
+                                        }
+                                        .frame(height: fieldHeight)
+                                    } else {
+                                        TextField(field.label.isEmpty ? "Value" : field.displayLabel, text: $fields[index].value)
                                             .textFieldStyle(.roundedBorder)
                                             .frame(height: fieldHeight)
                                             .focused($focusedFieldID, equals: field.id)
-                                        Button {
-                                            showingGenerator = true
-                                        } label: {
-                                            Image(systemName: "wand.and.stars")
-                                        }
-                                        .buttonStyle(.bordered)
                                     }
-                                } else if field.type == .totp {
-                                    HStack(spacing: 4) {
-                                        Text(field.value.isEmpty ? "Not configured" : "One-Time Password configured")
-                                            .font(.body)
-                                            .foregroundStyle(.secondary)
-                                        Spacer()
-                                        Button("Replace") {
-                                            totpSetupFieldID = field.id
-                                            showingTOTPSetup = true
-                                        }
-                                        .buttonStyle(.bordered)
-                                    }
-                                    .frame(height: fieldHeight)
-                                } else {
-                                    TextField(field.label.isEmpty ? "Value" : field.label, text: $field.value)
-                                        .textFieldStyle(.roundedBorder)
-                                        .frame(height: fieldHeight)
-                                        .focused($focusedFieldID, equals: field.id)
                                 }
-                            }
 
-                            Button(role: .destructive) {
-                                fields.removeAll { $0.id == field.id }
-                            } label: {
-                                Image(systemName: "minus.circle")
+                                Button(role: .destructive) {
+                                    fields.removeAll { $0.id == field.id }
+                                } label: {
+                                    Image(systemName: "minus.circle")
+                                }
+                                .buttonStyle(.borderless)
                             }
-                            .buttonStyle(.borderless)
                         }
                     }
 
