@@ -19,17 +19,9 @@ jobs:
       - name: Install XcodeGen
         run: brew install xcodegen
 
-      - name: Generate Xcode project
-        working-directory: osx
-        run: xcodegen generate
-
       - name: Build (unsigned)
         working-directory: osx
-        run: |
-          xcodebuild -project OnePasshole.xcodeproj -scheme OnePasshole \
-            -configuration Release -derivedDataPath build \
-            CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO \
-            build
+        run: ./build.sh Release
 
       - name: Zip app
         working-directory: osx

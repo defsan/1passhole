@@ -58,16 +58,10 @@ osx/
 
 ```bash
 cd osx
-
-# Generate the Xcode project
-xcodegen generate
-
-# Build
-xcodebuild -project OnePasshole.xcodeproj -scheme OnePasshole -configuration Debug build \
-  CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+./build.sh          # Debug build (add "Release" for a release build)
 ```
 
-This produces `1passhole.app`.
+This regenerates the Xcode project via `xcodegen` and builds unsigned into `osx/build/Build/Products/<config>/1passhole.app`. CI (`.github/workflows/build.yml`) runs the same script, so local and CI builds always match.
 
 ## Status
 
