@@ -5,10 +5,7 @@ A native macOS password manager, heavily inspired by 1Password. Open-source, aud
 
 ## Download
 
-Prebuilt, unsigned macOS builds are published automatically:
-
-- **Latest build from `main`** (updated on every push): [`latest-main` release](https://github.com/defsan/1passhole/releases/tag/latest-main) — download `1passhole-macos.zip`.
-- **Tagged versions**: see the [Releases page](https://github.com/defsan/1passhole/releases) for numbered `vX.Y.Z` releases, once available.
+[Download the latest build](https://github.com/defsan/1passhole/releases/tag/latest-main) — `1passhole-macos.zip`, rebuilt automatically on every push to `main`.
 
 The app isn't signed or notarized, so Gatekeeper will refuse a plain double-click on first launch. After unzipping, either:
 
