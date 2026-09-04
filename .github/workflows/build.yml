@@ -8,6 +8,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     # Needs Xcode 26+ to read this project's pbxproj format (object version 77).
@@ -36,6 +39,37 @@ jobs:
           name: 1passhole-macos
           path: osx/1passhole-macos.zip
           retention-days: 30
+
+      - name: Move rolling "latest-main" tag to this commit
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git tag -f latest-main
+          git push -f origin latest-main
+
+      - name: Publish rolling "latest build" release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest-main
+          name: "Latest build (main)"
+          target_commitish: ${{ github.sha }}
+          prerelease: true
+          make_latest: "false"
+          body: |
+            Automated, unsigned build of the latest commit on `main`.
+
+            Commit: ${{ github.sha }}
+
+            This is a rolling release: the `latest-main` tag and its asset are
+            replaced on every push to `main`. It is not a stable, versioned
+            release — for those, see the tagged releases on the
+            [Releases page](https://github.com/${{ github.repository }}/releases).
+
+            **First launch:** this build is unsigned and not notarized, so
+            Gatekeeper will block a plain double-click. Either right-click the
+            app → "Open" and confirm, or run:
+            `xattr -cr /path/to/1passhole.app`
+          files: osx/1passhole-macos.zip
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')

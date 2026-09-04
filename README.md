@@ -3,6 +3,19 @@
 A native macOS password manager, heavily inspired by 1Password. Open-source, auditable, and built on zero-knowledge encryption.
 <img width="1203" height="901" alt="image" src="https://github.com/user-attachments/assets/94233833-3219-44dc-afba-c20b64f33d54" />
 
+## Download
+
+Prebuilt, unsigned macOS builds are published automatically:
+
+- **Latest build from `main`** (updated on every push): [`latest-main` release](https://github.com/defsan/1passhole/releases/tag/latest-main) — download `1passhole-macos.zip`.
+- **Tagged versions**: see the [Releases page](https://github.com/defsan/1passhole/releases) for numbered `vX.Y.Z` releases, once available.
+
+The app isn't signed or notarized, so Gatekeeper will refuse a plain double-click on first launch. After unzipping, either:
+
+- Right-click `1passhole.app` → **Open**, then confirm in the dialog that appears, or
+- Run `xattr -cr /path/to/1passhole.app` in Terminal, then launch normally.
+
+You only need to do this once per download. Prefer to build it yourself? See [Building](#building) below.
 
 ## What it does
 
@@ -57,6 +70,8 @@ osx/
 ```
 
 ## Building
+
+Prebuilt binaries are available above under [Download](#download); the steps below build 1Passhole from source.
 
 ```bash
 cd osx
