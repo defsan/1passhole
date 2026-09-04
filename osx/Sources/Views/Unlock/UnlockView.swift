@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct UnlockView: View {
     @Environment(AppState.self) private var appState
@@ -134,16 +135,28 @@ struct UnlockView: View {
         }
         .frame(minWidth: 680, minHeight: 380)
         .onAppear {
-            // Setting @FocusState synchronously here often silently fails right at app
-            // launch, before the window has actually become key — deferring to the next
-            // run loop tick is the reliable fix.
-            DispatchQueue.main.async {
-                passwordFocused = true
-            }
+            focusPasswordField()
             if appState.authService.isTouchIDEnrolled && !attemptedTouchID {
                 attemptedTouchID = true
                 unlockWithTouchID()
             }
+        }
+        // Re-focus whenever the app regains activation (Cmd-Tab back in) or the
+        // window becomes key again (clicking it, switching Spaces/tabs), so the
+        // unlock screen is always ready for typing without an extra click.
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            focusPasswordField()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didBecomeKeyNotification)) { _ in
+            focusPasswordField()
+        }
+    }
+
+    private func focusPasswordField() {
+        // Setting @FocusState synchronously here often silently fails right as the
+        // window becomes key — deferring to the next run loop tick is the reliable fix.
+        DispatchQueue.main.async {
+            passwordFocused = true
         }
     }
 
