@@ -10,4 +10,5 @@ enum SettingsKey {
     static let compactMode = "settings.compactMode"
     static let storageMode = "settings.storageMode"
     static let recentVaults = "settings.recentVaults"
+    static let defaultVault = "settings.defaultVault"
 }

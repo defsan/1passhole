@@ -7,6 +7,7 @@ struct VaultSettingsTab: View {
     @Query(sort: \Vault.name) private var vaults: [Vault]
     @Query(sort: \OPVaultConnection.name) private var opvaultConnections: [OPVaultConnection]
     @AppStorage(SettingsKey.storageMode) private var storageMode: String = "local"
+    @AppStorage(SettingsKey.defaultVault) private var defaultVault: String = AppState.DefaultVaultSetting.automatic
     @State private var touchIDEnabled = false
     @State private var errorMessage: String?
     @State private var showRestartAlert = false
@@ -16,6 +17,7 @@ struct VaultSettingsTab: View {
     @State private var newVaultName = ""
     @State private var vaultToRename: Vault?
     @State private var renameText = ""
+    @State private var pendingOPVault: PendingOPVault?
 
     private var isUnlocked: Bool {
         appState.lockState == .unlocked
@@ -35,6 +37,30 @@ struct VaultSettingsTab: View {
             case .opvault:
                 opvaultConnections.first { $0.id == ref.id }.map(SelectedVault.opvault)
             }
+        }
+    }
+
+    /// True when the default-vault setting names a specific vault/connection that no
+    /// longer exists (unlock falls back to Automatic in that case).
+    private var isMissingDefaultVault: Bool {
+        guard let ref = AppState.RecentVaultRef(settingsValue: defaultVault) else { return false }
+        switch ref.kind {
+        case .native: return !vaults.contains { $0.id == ref.id }
+        case .opvault: return !opvaultConnections.contains { $0.id == ref.id }
+        }
+    }
+
+    private var defaultVaultCaption: String {
+        if isMissingDefaultVault {
+            return "That vault no longer exists — falling back to Automatic."
+        }
+        switch defaultVault {
+        case AppState.DefaultVaultSetting.automatic:
+            return "Opens the first vault alphabetically (or your primary 1Password vault)."
+        case AppState.DefaultVaultSetting.lastUsed:
+            return "Opens whichever vault you last switched to."
+        default:
+            return "Always opens this vault after unlocking."
         }
     }
 
@@ -104,6 +130,42 @@ struct VaultSettingsTab: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+            }
+
+            Divider()
+
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Default Vault")
+                    .font(.headline)
+
+                HStack {
+                    Text("Open after unlocking:")
+                    Picker("", selection: $defaultVault) {
+                        Text("Automatic").tag(AppState.DefaultVaultSetting.automatic)
+                        Text("Last Used").tag(AppState.DefaultVaultSetting.lastUsed)
+                        if !vaults.isEmpty || !opvaultConnections.isEmpty {
+                            Divider()
+                        }
+                        ForEach(vaults) { vault in
+                            Label(vault.name, systemImage: vault.iconName)
+                                .tag(AppState.RecentVaultRef(kind: .native, id: vault.id).settingsValue)
+                        }
+                        ForEach(opvaultConnections) { connection in
+                            Label(connection.name, systemImage: connection.iconName)
+                                .tag(AppState.RecentVaultRef(kind: .opvault, id: connection.id).settingsValue)
+                        }
+                        if isMissingDefaultVault {
+                            Text("Deleted vault").tag(defaultVault)
+                        }
+                    }
+                    .labelsHidden()
+                    .pickerStyle(.menu)
+                    .frame(width: 220)
+                }
+
+                Label(defaultVaultCaption, systemImage: "info.circle")
+                    .font(.caption)
+                    .foregroundStyle(isMissingDefaultVault ? .orange : .secondary)
             }
 
             Divider()
@@ -181,7 +243,7 @@ struct VaultSettingsTab: View {
                 Text("1Password Vault")
                     .font(.headline)
 
-                Text("Connect an existing 1Password vault (.opvault, usually inside Dropbox) to browse and edit it live, alongside your native vaults.")
+                Text("Connect an existing 1Password vault (.opvault, usually inside Dropbox) to browse and edit it live, alongside your native vaults. It must use the same password as 1Passhole, so one password unlocks everything.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
@@ -194,8 +256,19 @@ struct VaultSettingsTab: View {
                             Text("Profile: \(connection.profileName)")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
+                            if appState.opvaultPasswordMismatches.contains(connection.id) {
+                                Label("Password differs from your master password", systemImage: "exclamationmark.triangle")
+                                    .font(.caption)
+                                    .foregroundStyle(.orange)
+                            }
                         }
                         Spacer()
+                        if appState.opvaultPasswordMismatches.contains(connection.id) {
+                            Button("Match Password…") {
+                                pendingOPVault = PendingOPVault(connection: connection, isNew: false)
+                            }
+                            .disabled(!isUnlocked)
+                        }
                         Button("Switch To") {
                             appState.switchVault(to: .opvault(connection))
                         }
@@ -239,6 +312,9 @@ struct VaultSettingsTab: View {
             Button("Later", role: .cancel) { }
         } message: {
             Text("Quit and reopen 1passhole for the storage change to take effect.")
+        }
+        .sheet(item: $pendingOPVault) { pending in
+            OPVaultPasswordSheet(pending: pending)
         }
         .alert("New Vault", isPresented: $showingNewVault) {
             TextField("Vault name", text: $newVaultName)
@@ -304,8 +380,7 @@ struct VaultSettingsTab: View {
                 errorMessage = nil
                 do {
                     if newValue {
-                        let masterKeyData = try appState.cryptoEngine.getMasterKeyData()
-                        try appState.authService.enrollTouchID(masterKey: masterKeyData)
+                        try appState.enrollTouchID()
                     } else {
                         try appState.authService.unenrollTouchID()
                     }
@@ -336,20 +411,14 @@ struct VaultSettingsTab: View {
                 bookmarkData: bookmark,
                 profileName: profileName
             )
-            appState.modelContainer.mainContext.insert(connection)
-            try appState.modelContainer.mainContext.save()
-            appState.switchVault(to: .opvault(connection))
+            // Not saved yet — the sheet saves it only once its password checks out.
+            pendingOPVault = PendingOPVault(connection: connection, isNew: true)
         } catch {
             opvaultError = error.localizedDescription
         }
     }
 
     private func disconnectOPVault(_ connection: OPVaultConnection) {
-        if appState.selectedVault == .opvault(connection) {
-            appState.selectedVault = nil
-        }
-        appState.opvaultSessions.removeValue(forKey: connection.id)
-        appState.modelContainer.mainContext.delete(connection)
-        try? appState.modelContainer.mainContext.save()
+        appState.removeOPVaultConnection(connection)
     }
 }

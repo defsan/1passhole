@@ -1,7 +1,8 @@
 import SwiftUI
 
-/// Unlocks one OPVault connection with its own master password — a separate secret
-/// from 1Passhole's own, since this is a foreign vault being opened live.
+/// Fallback prompt for one OPVault connection that the master-password unlock couldn't
+/// open — its password differs from the master password, its folder was unreachable at
+/// unlock, or (after Touch ID) no saved keys exist for it yet.
 struct OPVaultUnlockView: View {
     let connection: OPVaultConnection
 
@@ -22,9 +23,16 @@ struct OPVaultUnlockView: View {
             Text(connection.name)
                 .font(.title3.weight(.semibold))
 
-            Text("Enter the master password for this 1Password vault.")
-                .font(.callout)
-                .foregroundStyle(.secondary)
+            if appState.opvaultPasswordMismatches.contains(connection.id) {
+                Text("This vault's password is different from your 1Passhole master password.\nEnter it here, or make them match in Settings → Vault.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            } else {
+                Text("Enter your master password to open this 1Password vault.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+            }
 
             SecureField("Master password", text: $password)
                 .textFieldStyle(.roundedBorder)
@@ -64,7 +72,7 @@ struct OPVaultUnlockView: View {
         Task {
             do {
                 let session = try OPVaultService.unlock(connection: connection, password: password)
-                appState.opvaultSessions[connection.id] = session
+                appState.didUnlockOPVaultSeparately(connection, session: session)
                 password = ""
             } catch {
                 errorMessage = error.localizedDescription

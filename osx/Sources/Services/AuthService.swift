@@ -2,12 +2,24 @@ import Foundation
 import Security
 import LocalAuthentication
 
+/// What a Touch ID unlock restores: 1passhole's master key plus the unlocked keys of
+/// each connected OPVault (keyed by connection id), so one biometric unlock opens
+/// everything — the same reach as typing the master password. No password is stored.
+struct BiometricUnlockBundle: Codable, Sendable {
+    let masterKey: Data
+    let opvaultKeys: [String: OPVaultKeys]
+
+    func opvaultKeys(for connectionID: UUID) -> OPVaultKeys? {
+        opvaultKeys[connectionID.uuidString]
+    }
+}
+
 /// Manages master password setup, verification, and Touch ID enrollment.
 ///
 /// Stores in Keychain:
 ///   - `salt`: the Argon2id salt used to derive the master key
 ///   - `verificationHash`: HKDF-derived hash to verify the password without storing it
-///   - `masterKeyRef`: master key stored in Secure Enclave, protected by Touch ID
+///   - `biometricAccount`: a `BiometricUnlockBundle`, protected by Touch ID
 final class AuthService: @unchecked Sendable {
     private let crypto: CryptoEngine
 
@@ -69,7 +81,15 @@ final class AuthService: @unchecked Sendable {
         keychainRead(account: biometricAccount) != nil
     }
 
-    func enrollTouchID(masterKey: SymmetricKeyData) throws {
+    func enrollTouchID(masterKey: SymmetricKeyData, opvaultKeys: [UUID: OPVaultKeys] = [:]) throws {
+        let bundle = BiometricUnlockBundle(
+            masterKey: masterKey.data,
+            opvaultKeys: Dictionary(uniqueKeysWithValues: opvaultKeys.map { ($0.key.uuidString, $0.value) })
+        )
+        guard let payload = try? JSONEncoder().encode(bundle) else {
+            throw AuthError.touchIDEnrollmentFailed
+        }
+
         let access = SecAccessControlCreateWithFlags(
             nil,
             kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
@@ -82,7 +102,7 @@ final class AuthService: @unchecked Sendable {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: keychainService,
             kSecAttrAccount as String: biometricAccount,
-            kSecValueData as String: masterKey.data,
+            kSecValueData as String: payload,
             kSecAttrAccessControl as String: access,
         ]
 
@@ -105,7 +125,7 @@ final class AuthService: @unchecked Sendable {
         }
     }
 
-    nonisolated func unlockWithTouchID() async throws -> SymmetricKeyData {
+    nonisolated func unlockWithTouchID() async throws -> BiometricUnlockBundle {
         let service = keychainService
         let account = biometricAccount
 
@@ -125,23 +145,38 @@ final class AuthService: @unchecked Sendable {
         guard status == errSecSuccess, let data = result as? Data else {
             throw AuthError.touchIDFailed
         }
-        return SymmetricKeyData(data: data)
+        if let bundle = try? JSONDecoder().decode(BiometricUnlockBundle.self, from: data) {
+            return bundle
+        }
+        // Enrolled before OPVault keys were stored: the item is just the raw master key.
+        return BiometricUnlockBundle(masterKey: data, opvaultKeys: [:])
     }
 
     // MARK: - Change password
 
-    func changePassword(from oldPassword: String, to newPassword: String) throws -> SymmetricKeyData {
-        let oldKey = try unlock(password: oldPassword)
+    /// Salt + verification hash for a master password. Changing the password means
+    /// deriving a new set, re-wrapping every vault key (see `AppState.changeMasterPassword`),
+    /// then storing the new set — with the old one kept to restore if the re-wrap fails.
+    struct Credentials {
+        let salt: Data
+        let verificationHash: Data
+    }
 
-        crypto.setMasterKey(oldKey)
+    func currentCredentials() -> Credentials? {
+        guard let salt = keychainRead(account: saltAccount),
+              let hash = keychainRead(account: hashAccount) else { return nil }
+        return Credentials(salt: salt, verificationHash: hash)
+    }
 
-        let newDerived = try KeyDerivation.deriveKey(from: newPassword)
-        let newHash = CryptoEngine.verificationHash(from: newDerived.key.symmetricKey)
+    func deriveCredentials(password: String) throws -> (key: SymmetricKeyData, credentials: Credentials) {
+        let derived = try KeyDerivation.deriveKey(from: password)
+        let hash = CryptoEngine.verificationHash(from: derived.key.symmetricKey)
+        return (derived.key, Credentials(salt: derived.salt, verificationHash: hash))
+    }
 
-        try keychainWrite(data: newDerived.salt, account: saltAccount)
-        try keychainWrite(data: newHash, account: hashAccount)
-
-        return newDerived.key
+    func storeCredentials(_ credentials: Credentials) throws {
+        try keychainWrite(data: credentials.salt, account: saltAccount)
+        try keychainWrite(data: credentials.verificationHash, account: hashAccount)
     }
 
     // MARK: - Keychain helpers

@@ -167,29 +167,13 @@ struct UnlockView: View {
 
         Task {
             do {
-                if appState.isOPVaultPrimary {
-                    try unlockOPVaultPrimary(password: password)
-                } else {
-                    let masterKey = try appState.authService.unlock(password: password)
-                    appState.unlock(with: masterKey)
-                }
+                try appState.unlock(password: password)
                 password = ""
             } catch {
                 errorMessage = error.localizedDescription
             }
             isProcessing = false
         }
-    }
-
-    /// The connected OPVault's own password is 1passhole's only password in this mode —
-    /// unlocking it re-derives the same native key that was enrolled at setup.
-    private func unlockOPVaultPrimary(password: String) throws {
-        guard let connection = appState.primaryOPVaultConnection() else {
-            throw OPVaultServiceError.itemNotFound
-        }
-        let session = try OPVaultService.unlock(connection: connection, password: password)
-        appState.unlock(with: session.derivedNativeMasterKey())
-        appState.opvaultSessions[connection.id] = session
     }
 
     private func unlockWithTouchID() {
@@ -199,11 +183,8 @@ struct UnlockView: View {
 
         Task {
             do {
-                let masterKey = try await appState.authService.unlockWithTouchID()
-                // `appState.unlock` selects the default vault, but Touch ID only restores
-                // the derived key, not a live OPVault session (that needs the real
-                // password) — its own unlock prompt appears once the vault is opened.
-                appState.unlock(with: masterKey)
+                let bundle = try await appState.authService.unlockWithTouchID()
+                appState.unlock(withTouchID: bundle)
             } catch {
                 errorMessage = "Touch ID failed. Enter your password."
                 passwordFocused = true

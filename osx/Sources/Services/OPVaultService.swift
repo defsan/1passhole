@@ -15,8 +15,18 @@ enum OPVaultServiceError: LocalizedError {
     }
 }
 
+/// The four keys an unlocked OPVault profile yields (master + overview, each split into
+/// encryption and MAC halves). These — never the vault's password — are what Touch ID
+/// enrollment stores, so a biometric unlock can reopen the vault without the password.
+struct OPVaultKeys: Codable, Sendable, Equatable {
+    let masterEnc: Data
+    let masterMac: Data
+    let overviewEnc: Data
+    let overviewMac: Data
+}
+
 /// Holds the keys derived on unlock, in memory only, for as long as this OPVault
-/// connection stays unlocked. Never persisted. The security-scoped resource access is
+/// connection stays unlocked. The security-scoped resource access is
 /// tied to this object's lifetime: releasing the last reference (locking, or removing
 /// the connection from `AppState.opvaultSessions`) calls `stopAccessingSecurityScopedResource`.
 final class OPVaultSession {
@@ -36,6 +46,10 @@ final class OPVaultSession {
         self.masterMac = masterMac
         self.overviewEnc = overviewEnc
         self.overviewMac = overviewMac
+    }
+
+    var keys: OPVaultKeys {
+        OPVaultKeys(masterEnc: masterEnc, masterMac: masterMac, overviewEnc: overviewEnc, overviewMac: overviewMac)
     }
 
     /// A deterministic key usable as 1passhole's own `CryptoEngine` master key, derived
@@ -114,6 +128,37 @@ enum OPVaultService {
             url.stopAccessingSecurityScopedResource()
             throw error
         }
+    }
+
+    /// Reopens a connection from keys saved at Touch ID enrollment, without the password.
+    /// Checks the keys still open the vault (by decrypting one item's overview) so stale
+    /// keys — e.g. the vault was replaced — fail here and fall back to the password
+    /// prompt, rather than silently showing an empty item list.
+    static func openSession(connection: OPVaultConnection, keys: OPVaultKeys) throws -> OPVaultSession {
+        let (url, _) = try OPVaultLocator.resolveBookmark(connection.bookmarkData)
+        guard url.startAccessingSecurityScopedResource() else {
+            throw OPVaultServiceError.cannotAccessFolder
+        }
+
+        let profileDir = url.appendingPathComponent(connection.profileName)
+        if let item = OPVaultFileStore.iterItems(profileDir: profileDir).first?.item {
+            guard let blob = Data(base64Encoded: item.o),
+                  (try? OPVaultCrypto.opdata01Decrypt(blob, encKey: keys.overviewEnc, macKey: keys.overviewMac)) != nil
+            else {
+                url.stopAccessingSecurityScopedResource()
+                throw OPVaultServiceError.wrongPassword
+            }
+        }
+
+        return OPVaultSession(
+            connectionID: connection.id,
+            folderURL: url,
+            profileDir: profileDir,
+            masterEnc: keys.masterEnc,
+            masterMac: keys.masterMac,
+            overviewEnc: keys.overviewEnc,
+            overviewMac: keys.overviewMac
+        )
     }
 
     // MARK: - List / decrypt
